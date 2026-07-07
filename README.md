@@ -23,3 +23,8 @@ v4 fixes:
 v5 updates:
 - Added global decimal-place selector.
 - Surface speed can now display/calculate in m/sec or m/min.
+
+
+v6 fixes:
+- Decimal selector now re-renders current SPC, surface speed and trigonometry results immediately.
+- Displayed values now consistently use the selected decimal places.
