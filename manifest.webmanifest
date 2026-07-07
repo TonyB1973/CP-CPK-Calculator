@@ -1,1 +1,21 @@
-{"name":"CP / CPK Calculator","short_name":"CP CPK","start_url":"./index.html","display":"standalone","background_color":"#17191c","theme_color":"#f2c230","orientation":"any","icons":[{"src":"icon-192.png","sizes":"192x192","type":"image/png"},{"src":"icon-512.png","sizes":"512x512","type":"image/png"}]}
+{
+  "name": "Engineering Toolkit - SPC",
+  "short_name": "SPC Toolkit",
+  "start_url": "./index.html",
+  "display": "standalone",
+  "background_color": "#202226",
+  "theme_color": "#ffcc00",
+  "description": "Engineering SPC toolkit with Cp/Cpk, Pp/Ppk, charts and CSV import.",
+  "icons": [
+    {
+      "src": "icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ]
+}

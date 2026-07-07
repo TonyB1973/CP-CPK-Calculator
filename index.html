@@ -1,78 +1,278 @@
 <!doctype html>
 <html lang="en">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
-  <meta name="theme-color" content="#f2c230" />
-  <meta name="apple-mobile-web-app-capable" content="yes" />
-  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
-  <meta name="apple-mobile-web-app-title" content="CP CPK" />
-  <link rel="manifest" href="manifest.webmanifest" />
-  <link rel="apple-touch-icon" href="icon-192.png" />
-  <title>CP / CPK Calculator</title>
-  <style>
-    :root{
-      --bg:#17191c; --panel:#24282d; --panel2:#1e2227; --line:#3a4149; --text:#f2f4f7;
-      --muted:#aeb7c2; --yellow:#f2c230; --green:#52d273; --red:#ff5a5f; --blue:#74b9ff;
-      --shadow: 0 16px 44px rgba(0,0,0,.35); --radius:18px;
-    }
-    *{box-sizing:border-box} html,body{height:100%}
-    body{margin:0;background:radial-gradient(circle at top left,#2a2f36 0,#17191c 34%,#101214 100%);color:var(--text);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Arial,sans-serif;}
-    .app{min-height:100%;padding:calc(14px + env(safe-area-inset-top)) 14px calc(18px + env(safe-area-inset-bottom));max-width:1260px;margin:auto}
-    header{display:flex;align-items:center;gap:14px;margin-bottom:14px}.logo{width:48px;height:48px;border-radius:14px;background:linear-gradient(135deg,var(--yellow),#ffd966);display:grid;place-items:center;color:#1a1a1a;font-weight:900;box-shadow:var(--shadow)}
-    h1{font-size:clamp(22px,4vw,34px);margin:0}.subtitle{color:var(--muted);font-size:14px;margin-top:3px}.grid{display:grid;grid-template-columns:390px 1fr;gap:14px}.panel{background:linear-gradient(180deg,var(--panel),var(--panel2));border:1px solid var(--line);border-radius:var(--radius);box-shadow:var(--shadow);overflow:hidden}.panel h2{font-size:15px;letter-spacing:.08em;text-transform:uppercase;margin:0;padding:13px 15px;border-bottom:1px solid var(--line);color:var(--yellow)}.body{padding:14px}
-    label{display:block;font-size:12px;text-transform:uppercase;letter-spacing:.08em;color:var(--muted);margin:10px 0 6px}input,textarea,button{font:inherit}input,textarea{width:100%;border:1px solid #47505b;background:#121518;color:var(--text);border-radius:12px;padding:11px 12px;outline:none}textarea{min-height:220px;resize:vertical;line-height:1.35}.row{display:grid;grid-template-columns:1fr 1fr;gap:10px}.buttons{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:12px}button{border:0;border-radius:13px;padding:12px 10px;font-weight:800;cursor:pointer;background:#303741;color:var(--text);border:1px solid #48515b}.primary{background:var(--yellow);color:#151515;border-color:#f8d35c}.danger{background:#3a2225;border-color:#7d3339;color:#ffd8db}.small{font-size:13px;padding:9px 10px}.hint{font-size:12px;color:var(--muted);line-height:1.35;margin-top:10px}.kpis{display:grid;grid-template-columns:repeat(4,1fr);gap:12px}.kpi{background:#15191d;border:1px solid var(--line);border-radius:16px;padding:13px}.kpi .name{color:var(--muted);font-size:12px;text-transform:uppercase;letter-spacing:.08em}.kpi .val{font-size:28px;font-weight:900;margin-top:6px}.ok{color:var(--green)}.bad{color:var(--red)}.warn{color:var(--yellow)}canvas{width:100%;height:330px;background:#101316;border:1px solid var(--line);border-radius:16px;margin-top:12px}.tableWrap{overflow:auto;max-height:240px;border:1px solid var(--line);border-radius:14px;margin-top:12px}table{width:100%;border-collapse:collapse;font-size:13px}th,td{padding:9px;border-bottom:1px solid #303740;text-align:right}th:first-child,td:first-child{text-align:left}th{position:sticky;top:0;background:#20252b;color:var(--yellow)}.status{display:inline-flex;gap:8px;align-items:center;border:1px solid var(--line);background:#14181c;border-radius:999px;padding:8px 12px;color:var(--muted);font-size:12px}.dot{width:9px;height:9px;border-radius:50%;background:var(--green)}.topbar{display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap;margin-bottom:12px}.pill{padding:5px 9px;border:1px solid #4b535e;border-radius:999px;color:var(--muted);font-size:12px}.file{position:relative;overflow:hidden}.file input{position:absolute;inset:0;opacity:0;cursor:pointer}@media(max-width:900px){.grid{grid-template-columns:1fr}.kpis{grid-template-columns:repeat(2,1fr)}textarea{min-height:170px}}@media(max-width:460px){.app{padding-left:10px;padding-right:10px}.kpis{grid-template-columns:1fr 1fr}.kpi .val{font-size:23px}.buttons{grid-template-columns:1fr}.row{grid-template-columns:1fr}canvas{height:280px}}
-  </style>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#ffcc00">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="apple-touch-icon" href="icon-192.png">
+<title>Engineering Toolkit - SPC</title>
+<style>
+:root{
+  --bg:#1f2227;--panel:#2b2f36;--panel2:#24282e;--line:#454b55;--text:#eef1f5;--muted:#a9b0bb;
+  --yellow:#ffcc00;--good:#36d399;--warn:#f8b84e;--bad:#ff5f5f;--blue:#69b7ff;
+  --shadow: 0 18px 50px rgba(0,0,0,.28);
+}
+*{box-sizing:border-box}
+html,body{margin:0;background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Arial,sans-serif}
+body{min-height:100vh}
+.app{max-width:1500px;margin:auto;padding:18px;padding-bottom:42px}
+.header{display:flex;gap:14px;align-items:center;justify-content:space-between;border:1px solid var(--line);background:linear-gradient(180deg,#30343b,#252930);border-radius:18px;padding:14px 16px;box-shadow:var(--shadow);position:sticky;top:8px;z-index:10}
+.brand{display:flex;gap:12px;align-items:center}
+.logo{width:44px;height:44px;border:2px solid var(--yellow);border-radius:12px;display:grid;place-items:center;font-weight:900;color:var(--yellow);background:#202226}
+h1{font-size:20px;margin:0;letter-spacing:.4px}.subtitle{font-size:12px;color:var(--muted);margin-top:3px}
+.tabs{display:flex;gap:8px;flex-wrap:wrap;justify-content:flex-end}
+.tab,.btn{border:1px solid var(--line);background:#20242a;color:var(--text);border-radius:12px;padding:10px 12px;font-weight:700;cursor:pointer}
+.tab.active,.btn.primary{border-color:var(--yellow);color:#161616;background:var(--yellow)}
+.btn.small{padding:7px 9px;font-size:12px}.btn.danger{border-color:#7a3333;color:#ffd7d7}
+.grid{display:grid;grid-template-columns:360px 1fr 360px;gap:16px;margin-top:16px}
+.panel{background:linear-gradient(180deg,var(--panel),var(--panel2));border:1px solid var(--line);border-radius:18px;padding:14px;box-shadow:var(--shadow)}
+.panel h2{font-size:15px;margin:0 0 12px 0;border-left:5px solid var(--yellow);padding-left:9px}
+label{display:block;color:var(--muted);font-size:12px;font-weight:700;margin:10px 0 5px}
+input,textarea,select{width:100%;border:1px solid var(--line);border-radius:12px;background:#15181d;color:var(--text);padding:11px;font-size:15px}
+textarea{min-height:160px;font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;resize:vertical}
+.row{display:grid;grid-template-columns:1fr 1fr;gap:10px}.row3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px}
+.buttons{display:flex;gap:8px;flex-wrap:wrap;margin-top:12px}
+.cards{display:grid;grid-template-columns:repeat(4,minmax(120px,1fr));gap:10px}
+.card{border:1px solid var(--line);background:#191d22;border-radius:16px;padding:12px;min-height:82px}
+.card .k{color:var(--muted);font-size:12px;font-weight:800;text-transform:uppercase;letter-spacing:.4px}.card .v{font-size:25px;font-weight:900;margin-top:8px}
+.card.good{border-color:rgba(54,211,153,.65)}.card.warn{border-color:rgba(248,184,78,.75)}.card.bad{border-color:rgba(255,95,95,.75)}
+.status{font-weight:900;border-radius:999px;padding:7px 10px;display:inline-block;margin-top:8px}
+.status.good{background:rgba(54,211,153,.14);color:var(--good)}.status.warn{background:rgba(248,184,78,.14);color:var(--warn)}.status.bad{background:rgba(255,95,95,.14);color:var(--bad)}
+canvas{width:100%;height:300px;background:#14171b;border:1px solid var(--line);border-radius:16px}
+.chartTitle{display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;color:var(--muted);font-size:12px;font-weight:800}
+.note{font-size:12px;color:var(--muted);line-height:1.45}.resultsList{font-size:13px;line-height:1.7;color:#d8dce2}
+.tableWrap{max-height:270px;overflow:auto;border:1px solid var(--line);border-radius:14px}
+table{width:100%;border-collapse:collapse;font-size:12px}td,th{border-bottom:1px solid #3a4049;padding:7px;text-align:right}th{position:sticky;top:0;background:#20242a;color:var(--yellow)}
+.honey{display:grid;grid-template-columns:repeat(auto-fit,minmax(145px,1fr));gap:12px}
+.hex{min-height:92px;border:1px solid var(--line);border-radius:18px;background:#191d22;padding:14px;display:flex;flex-direction:column;justify-content:center}
+.hex.active{border-color:var(--yellow)}.hex strong{color:var(--yellow)}.hidden{display:none!important}
+.footer{margin-top:16px;color:var(--muted);font-size:12px;text-align:center}
+@media(max-width:1150px){.grid{grid-template-columns:1fr}.header{position:relative;top:0}.cards{grid-template-columns:repeat(2,1fr)}}
+@media(max-width:560px){.app{padding:10px}.header{align-items:flex-start;flex-direction:column}.tabs{justify-content:flex-start}.cards{grid-template-columns:1fr}.row,.row3{grid-template-columns:1fr}canvas{height:250px}}
+@media print{.header,.left,.buttons,.footer{display:none}.grid{display:block}.panel{box-shadow:none;break-inside:avoid;margin-bottom:12px}body{background:white;color:black}.app{max-width:none}.panel,canvas{background:white;color:black}}
+</style>
 </head>
 <body>
 <div class="app">
-  <header><div class="logo">Cp</div><div><h1>CP / CPK Calculator</h1><div class="subtitle">Offline PWA • sample data • histogram • industry-standard within-subgroup estimate using overall sample standard deviation</div></div></header>
-  <div class="grid">
-    <section class="panel"><h2>01 — Input</h2><div class="body">
-      <div class="row"><div><label>Lower spec limit</label><input id="lsl" type="number" step="0.0001" value="9.90"></div><div><label>Upper spec limit</label><input id="usl" type="number" step="0.0001" value="10.10"></div></div>
-      <label>Measured values</label><textarea id="data" spellcheck="false" placeholder="Paste values separated by commas, spaces, tabs or new lines"></textarea>
-      <div class="buttons"><button class="primary" id="calc">Calculate</button><button class="danger" id="clear">Clear</button><button class="small" id="sample">Load sample</button><label class="file small" style="text-align:center">Import CSV<input id="file" type="file" accept=".csv,text/csv,text/plain"></label></div>
-      <div class="hint">Formulae: Cp = (USL − LSL) / 6σ. Cpu = (USL − mean) / 3σ. Cpl = (mean − LSL) / 3σ. Cpk = min(Cpu, Cpl).</div>
-    </div></section>
-    <main class="panel"><h2>02 — Capability Result</h2><div class="body">
-      <div class="topbar"><span class="status"><span class="dot"></span><span id="installText">Ready for Safari Home Screen install</span></span><span class="pill" id="countPill">0 values</span></div>
-      <div class="kpis"><div class="kpi"><div class="name">Mean</div><div class="val" id="mean">—</div></div><div class="kpi"><div class="name">Std Dev σ</div><div class="val" id="sd">—</div></div><div class="kpi"><div class="name">Cp</div><div class="val" id="cp">—</div></div><div class="kpi"><div class="name">Cpk</div><div class="val" id="cpk">—</div></div></div>
-      <canvas id="chart" width="1200" height="520"></canvas>
-      <div class="tableWrap"><table><thead><tr><th>Metric</th><th>Value</th></tr></thead><tbody id="metrics"><tr><td>Status</td><td>Enter data and calculate</td></tr></tbody></table></div>
-    </div></main>
+  <div class="header">
+    <div class="brand"><div class="logo">SPC</div><div><h1>Engineering Toolkit</h1><div class="subtitle">Cp / Cpk capability calculator · installable PWA · offline ready</div></div></div>
+    <div class="tabs">
+      <button class="tab active" data-page="spc">SPC</button>
+      <button class="tab" data-page="toolkit">Toolkit</button>
+      <button class="tab" data-page="report">Report</button>
+    </div>
   </div>
+
+  <section id="page-spc" class="page">
+    <div class="grid">
+      <div class="left">
+        <div class="panel">
+          <h2>01 · Specification</h2>
+          <div class="row">
+            <div><label>Lower spec limit</label><input id="lsl" type="number" step="0.0001" value="9.900"></div>
+            <div><label>Upper spec limit</label><input id="usl" type="number" step="0.0001" value="10.100"></div>
+          </div>
+          <div class="row">
+            <div><label>Subgroup size</label><input id="subgroup" type="number" min="2" step="1" value="5"></div>
+            <div><label>Target</label><input id="target" type="number" step="0.0001" value="10.000"></div>
+          </div>
+          <div class="buttons">
+            <button class="btn primary" id="analyse">Analyse</button>
+            <button class="btn" id="loadSample">Load sample</button>
+            <button class="btn danger" id="clear">Clear</button>
+          </div>
+        </div>
+
+        <div class="panel" style="margin-top:16px">
+          <h2>02 · Data input</h2>
+          <label>Paste from Excel / CSV / one value per line</label>
+          <textarea id="data"></textarea>
+          <div class="buttons">
+            <input id="file" type="file" accept=".csv,.txt" style="display:none">
+            <button class="btn" id="importBtn">Import CSV</button>
+            <button class="btn" id="exportBtn">Export CSV</button>
+            <button class="btn" id="saveLocal">Save analysis</button>
+            <button class="btn" id="loadLocal">Load saved</button>
+          </div>
+          <p class="note">Accepts comma, tab, space or newline separated values. Non-numeric headings are ignored.</p>
+        </div>
+      </div>
+
+      <div>
+        <div class="panel">
+          <h2>03 · Capability dashboard</h2>
+          <div class="cards" id="cards"></div>
+        </div>
+
+        <div class="panel" style="margin-top:16px">
+          <div class="chartTitle"><span>Histogram with normal curve, mean and specification limits</span><span id="histInfo"></span></div>
+          <canvas id="hist" width="1000" height="360"></canvas>
+        </div>
+
+        <div class="panel" style="margin-top:16px">
+          <div class="chartTitle"><span>Run chart</span><span>value over measurement number</span></div>
+          <canvas id="run" width="1000" height="340"></canvas>
+        </div>
+
+        <div class="panel" style="margin-top:16px">
+          <div class="chartTitle"><span>Moving range chart</span><span>absolute difference between adjacent points</span></div>
+          <canvas id="mr" width="1000" height="300"></canvas>
+        </div>
+      </div>
+
+      <div>
+        <div class="panel">
+          <h2>04 · Engineering summary</h2>
+          <div id="summary" class="resultsList"></div>
+        </div>
+        <div class="panel" style="margin-top:16px">
+          <h2>05 · Data table</h2>
+          <div class="tableWrap"><table id="tbl"></table></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="page-toolkit" class="page hidden">
+    <div class="panel" style="margin-top:16px">
+      <h2>Engineering Toolkit Launcher</h2>
+      <div class="honey">
+        <div class="hex active"><strong>SPC</strong><span>Cp, Cpk, Pp, Ppk, charts</span></div>
+        <div class="hex"><strong>Trigonometry</strong><span>Coming next</span></div>
+        <div class="hex"><strong>Surface Speed</strong><span>Diameter, radius, RPM, m/sec</span></div>
+        <div class="hex"><strong>Bolt Circle</strong><span>PCD coordinate calculator</span></div>
+        <div class="hex"><strong>Unit Converter</strong><span>Metric / imperial</span></div>
+        <div class="hex"><strong>Six Point Align</strong><span>Future module</span></div>
+      </div>
+    </div>
+  </section>
+
+  <section id="page-report" class="page hidden">
+    <div class="panel" style="margin-top:16px">
+      <h2>Printable report</h2>
+      <div class="buttons"><button class="btn primary" onclick="window.print()">Print / Save PDF</button></div>
+      <div id="reportBody" class="resultsList" style="margin-top:14px"></div>
+    </div>
+  </section>
+
+  <div class="footer">Engineering Toolkit PWA · GitHub Pages compatible · Safari Home Screen ready</div>
 </div>
+
 <script>
-const $=id=>document.getElementById(id);
-function parseValues(text){return text.split(/[\s,;\t]+/).map(v=>Number(v.trim())).filter(v=>Number.isFinite(v));}
-function fmt(v,d=4){return Number.isFinite(v)?v.toFixed(d):'—'}
-function mean(a){return a.reduce((s,v)=>s+v,0)/a.length}
-function stdev(a,m){if(a.length<2)return NaN;return Math.sqrt(a.reduce((s,v)=>s+(v-m)**2,0)/(a.length-1));}
-function classify(v){return v>=1.33?'ok':v>=1?'warn':'bad'}
-function setVal(id,v,d=4,cls=false){const el=$(id);el.textContent=fmt(v,d);el.className='val '+(cls?classify(v):'')}
-function calculate(){
- const vals=parseValues($('data').value); const lsl=Number($('lsl').value), usl=Number($('usl').value);
- $('countPill').textContent=vals.length+' values';
- if(vals.length<2||!Number.isFinite(lsl)||!Number.isFinite(usl)||usl<=lsl){alert('Enter at least two values and valid LSL/USL limits.');return;}
- const m=mean(vals), s=stdev(vals,m), cp=(usl-lsl)/(6*s), cpu=(usl-m)/(3*s), cpl=(m-lsl)/(3*s), cpk=Math.min(cpu,cpl);
- setVal('mean',m,4); setVal('sd',s,5); setVal('cp',cp,3,true); setVal('cpk',cpk,3,true);
- const out=[['Count',vals.length],['Minimum',fmt(Math.min(...vals),4)],['Maximum',fmt(Math.max(...vals),4)],['Range',fmt(Math.max(...vals)-Math.min(...vals),4)],['Lower Spec Limit',fmt(lsl,4)],['Upper Spec Limit',fmt(usl,4)],['Cpu',fmt(cpu,3)],['Cpl',fmt(cpl,3)],['Cp',fmt(cp,3)],['Cpk',fmt(cpk,3)],['Interpretation', cpk>=1.33?'Capable / typical production target met':cpk>=1?'Marginal / needs control improvement':'Not capable against limits']];
- $('metrics').innerHTML=out.map(r=>`<tr><td>${r[0]}</td><td>${r[1]}</td></tr>`).join(''); draw(vals,lsl,usl,m,s);
+const $ = id => document.getElementById(id);
+const sampleInline = `Measurement
+9.99321
+10.01844
+9.98250
+10.03118
+9.97420`;
+
+function parseValues(text){
+  return text.split(/[\s,;\t]+/).map(x=>Number(x.trim())).filter(x=>Number.isFinite(x));
 }
-function draw(vals,lsl,usl,m,s){
- const c=$('chart'), ctx=c.getContext('2d'), W=c.width,H=c.height; ctx.clearRect(0,0,W,H);
- const min=Math.min(...vals,lsl,m-4*s), max=Math.max(...vals,usl,m+4*s), pad=70, base=H-70, top=38, bins=24, bw=(max-min)/bins;
- const hist=Array(bins).fill(0); vals.forEach(v=>{let i=Math.floor((v-min)/bw); if(i<0)i=0;if(i>=bins)i=bins-1;hist[i]++;}); const maxC=Math.max(...hist,1);
- ctx.strokeStyle='#3a4149';ctx.lineWidth=2;ctx.beginPath();ctx.moveTo(pad,top);ctx.lineTo(pad,base);ctx.lineTo(W-pad,base);ctx.stroke();
- for(let i=0;i<bins;i++){const x=pad+i*(W-2*pad)/bins+2, h=hist[i]/maxC*(base-top-20), y=base-h;ctx.fillStyle='#56616e';ctx.fillRect(x,y,(W-2*pad)/bins-4,h);}
- function x(v){return pad+(v-min)/(max-min)*(W-2*pad)}
- function vline(v,label,color){const xx=x(v);ctx.strokeStyle=color;ctx.lineWidth=4;ctx.beginPath();ctx.moveTo(xx,top);ctx.lineTo(xx,base+12);ctx.stroke();ctx.fillStyle=color;ctx.font='bold 28px -apple-system,Segoe UI';ctx.textAlign='center';ctx.fillText(label,xx,30)}
- vline(lsl,'LSL','#ff5a5f'); vline(usl,'USL','#ff5a5f'); vline(m,'MEAN','#f2c230');
- ctx.fillStyle='#aeb7c2';ctx.font='24px -apple-system,Segoe UI';ctx.textAlign='center';ctx.fillText('Distribution histogram with specification limits',W/2,H-22);
+function mean(a){return a.reduce((s,x)=>s+x,0)/a.length}
+function sd(a, sample=true){const m=mean(a); const v=a.reduce((s,x)=>s+(x-m)*(x-m),0)/(a.length-(sample?1:0)); return Math.sqrt(Math.max(0,v))}
+function erf(x){const s=x<0?-1:1; x=Math.abs(x); const a1=.254829592,a2=-.284496736,a3=1.421413741,a4=-1.453152027,a5=1.061405429,p=.3275911; const t=1/(1+p*x); const y=1-(((((a5*t+a4)*t)+a3)*t+a2)*t+a1)*t*Math.exp(-x*x); return s*y}
+function normCdf(z){return .5*(1+erf(z/Math.SQRT2))}
+function fmt(x,d=4){return Number.isFinite(x)?x.toFixed(d):"—"}
+function clsCpk(x){return x>=1.33?"good":x>=1.0?"warn":"bad"}
+
+function calc(){
+  const values=parseValues($("data").value);
+  const lsl=Number($("lsl").value), usl=Number($("usl").value), target=Number($("target").value);
+  if(values.length<2 || !Number.isFinite(lsl) || !Number.isFinite(usl) || usl<=lsl){ renderEmpty(); return; }
+  const n=values.length, xbar=mean(values), s=sd(values,true), spop=sd(values,false), min=Math.min(...values), max=Math.max(...values), range=max-min;
+  const cp=(usl-lsl)/(6*s), cpu=(usl-xbar)/(3*s), cpl=(xbar-lsl)/(3*s), cpk=Math.min(cpu,cpl);
+  const pp=(usl-lsl)/(6*spop), ppu=(usl-xbar)/(3*spop), ppl=(xbar-lsl)/(3*spop), ppk=Math.min(ppu,ppl);
+  const zLower=(lsl-xbar)/s, zUpper=(usl-xbar)/s;
+  const pBelow=normCdf(zLower), pAbove=1-normCdf(zUpper), ppm=(pBelow+pAbove)*1e6, yieldPct=(1-pBelow-pAbove)*100;
+  const zbench=Math.min((xbar-lsl)/s,(usl-xbar)/s);
+  const res={values,lsl,usl,target,n,xbar,s,spop,min,max,range,cp,cpu,cpl,cpk,pp,ppk,ppm,yieldPct,zbench};
+  render(res); 
 }
-function loadSample(){fetch('sample-data.csv').then(r=>r.text()).then(t=>{$('data').value=t.replace(/value\n/i,'').trim();calculate();});}
-$('calc').addEventListener('click',calculate);$('clear').addEventListener('click',()=>{ $('data').value=''; ['mean','sd','cp','cpk'].forEach(id=>$(id).textContent='—'); $('metrics').innerHTML='<tr><td>Status</td><td>Cleared</td></tr>'; $('countPill').textContent='0 values'; const c=$('chart'); c.getContext('2d').clearRect(0,0,c.width,c.height);});$('sample').addEventListener('click',loadSample);
-$('file').addEventListener('change',e=>{const f=e.target.files[0];if(!f)return; const rd=new FileReader();rd.onload=()=>{$('data').value=String(rd.result).replace(/[^0-9+\-.eE,;\s\t]/g,' ');calculate();};rd.readAsText(f);});
-if('serviceWorker' in navigator){navigator.serviceWorker.register('./service-worker.js').then(()=>{$('installText').textContent='Offline PWA ready — use Share → Add to Home Screen';}).catch(()=>{});}loadSample();
+
+function renderEmpty(){
+  $("cards").innerHTML='<div class="card bad"><div class="k">Status</div><div class="v">Need data</div></div>';
+  $("summary").innerHTML='Enter at least two measurements and valid LSL/USL.';
+}
+
+function render(r){
+  const cards=[
+    ["Cp",r.cp,clsCpk(r.cp)],["Cpk",r.cpk,clsCpk(r.cpk)],["Pp",r.pp,clsCpk(r.pp)],["Ppk",r.ppk,clsCpk(r.ppk)],
+    ["Mean",r.xbar,""],["Std dev",r.s,""],["PPM",r.ppm,""],["Yield %",r.yieldPct,""]
+  ];
+  $("cards").innerHTML=cards.map(c=>`<div class="card ${c[2]}"><div class="k">${c[0]}</div><div class="v">${c[0]=="PPM"?fmt(c[1],0):c[0]=="Yield %"?fmt(c[1],3):fmt(c[1],4)}</div></div>`).join("");
+  const verdict=r.cpk>=1.33?["good","Capable"]:(r.cpk>=1.0?["warn","Marginal"]:["bad","Not capable"]);
+  $("summary").innerHTML=`
+    <span class="status ${verdict[0]}">${verdict[1]}</span><br><br>
+    Count: <b>${r.n}</b><br>
+    Mean: <b>${fmt(r.xbar,5)}</b><br>
+    Sample σ: <b>${fmt(r.s,5)}</b><br>
+    Population σ: <b>${fmt(r.spop,5)}</b><br>
+    Min / Max: <b>${fmt(r.min,5)} / ${fmt(r.max,5)}</b><br>
+    Range: <b>${fmt(r.range,5)}</b><br>
+    CPU / CPL: <b>${fmt(r.cpu,4)} / ${fmt(r.cpl,4)}</b><br>
+    Estimated PPM outside spec: <b>${fmt(r.ppm,0)}</b><br>
+    Z bench: <b>${fmt(r.zbench,3)}</b><br><br>
+    <span class="note">Cp/Cpk use sample standard deviation. Pp/Ppk use population standard deviation across all values.</span>`;
+  $("reportBody").innerHTML=$("summary").innerHTML + `<br><br><b>Specification:</b> LSL ${r.lsl}, Target ${r.target}, USL ${r.usl}`;
+  renderTable(r.values);
+  drawHist($("hist"),r); drawRun($("run"),r); drawMR($("mr"),r);
+}
+function renderTable(values){
+  let rows='<tr><th>#</th><th>Measurement</th></tr>';
+  values.forEach((v,i)=>rows+=`<tr><td>${i+1}</td><td>${fmt(v,5)}</td></tr>`);
+  $("tbl").innerHTML=rows;
+}
+function setupCanvas(c){
+  const ctx=c.getContext("2d"), w=c.width,h=c.height;
+  ctx.clearRect(0,0,w,h); ctx.fillStyle="#14171b"; ctx.fillRect(0,0,w,h);
+  ctx.strokeStyle="#454b55"; ctx.lineWidth=1; ctx.strokeRect(40,20,w-70,h-55);
+  return {ctx,w,h,l:50,t:25,r:w-30,b:h-45};
+}
+function line(ctx,x1,y1,x2,y2,col,w=2){ctx.strokeStyle=col;ctx.lineWidth=w;ctx.beginPath();ctx.moveTo(x1,y1);ctx.lineTo(x2,y2);ctx.stroke()}
+function txt(ctx,s,x,y,col="#a9b0bb",align="left"){ctx.fillStyle=col;ctx.font="14px -apple-system,Segoe UI,Arial";ctx.textAlign=align;ctx.fillText(s,x,y)}
+function drawHist(c,r){
+  const {ctx,w,h,l,t,b}=setupCanvas(c), plotW=w-80, plotH=h-75;
+  const min=Math.min(r.min,r.lsl), max=Math.max(r.max,r.usl), bins=Math.min(24,Math.max(8,Math.round(Math.sqrt(r.n))));
+  const bw=(max-min)/bins, counts=Array(bins).fill(0);
+  r.values.forEach(v=>{let k=Math.floor((v-min)/bw); if(k<0)k=0;if(k>=bins)k=bins-1;counts[k]++});
+  const maxC=Math.max(...counts);
+  counts.forEach((ct,i)=>{const x=l+i*plotW/bins+2, bh=ct/maxC*plotH; ctx.fillStyle="#ffcc00"; ctx.fillRect(x,b-bh,plotW/bins-4,bh);});
+  function X(v){return l+(v-min)/(max-min)*plotW} function Ydens(y){return b-y*plotH}
+  [r.lsl,r.usl,r.xbar].forEach((v,i)=>{const col=i<2?"#ff5f5f":"#69b7ff"; line(ctx,X(v),t,X(v),b,col,3); txt(ctx,i==0?"LSL":i==1?"USL":"MEAN",X(v)+4,t+18,col)});
+  ctx.beginPath(); let first=true; const scale=maxC*bw*Math.sqrt(2*Math.PI)*r.s;
+  for(let i=0;i<220;i++){const xval=min+(max-min)*i/219; const dens=Math.exp(-.5*((xval-r.xbar)/r.s)**2)*scale/(r.s*Math.sqrt(2*Math.PI)); const x=X(xval), y=Ydens(dens/maxC); if(first){ctx.moveTo(x,y);first=false}else ctx.lineTo(x,y)}
+  ctx.strokeStyle="#eef1f5";ctx.lineWidth=3;ctx.stroke();
+  txt(ctx,`n=${r.n}  bins=${bins}`,w-40,h-18,"#a9b0bb","right");
+}
+function drawRun(c,r){
+  const {ctx,w,h,l,t,b}=setupCanvas(c), plotW=w-80, plotH=h-75;
+  const ymin=Math.min(r.min,r.lsl), ymax=Math.max(r.max,r.usl); function X(i){return l+i/(r.values.length-1)*plotW} function Y(v){return b-(v-ymin)/(ymax-ymin)*plotH}
+  [r.lsl,r.usl,r.xbar].forEach((v,i)=>line(ctx,l,Y(v),w-30,Y(v),i<2?"#ff5f5f":"#69b7ff",2));
+  ctx.beginPath(); r.values.forEach((v,i)=>{const x=X(i),y=Y(v); if(i==0)ctx.moveTo(x,y); else ctx.lineTo(x,y)}); ctx.strokeStyle="#ffcc00";ctx.lineWidth=2;ctx.stroke();
+}
+function drawMR(c,r){
+  const mr=[]; for(let i=1;i<r.values.length;i++)mr.push(Math.abs(r.values[i]-r.values[i-1]));
+  const {ctx,w,h,l,t,b}=setupCanvas(c), plotW=w-80, plotH=h-75; const max=Math.max(...mr,0.001);
+  function X(i){return l+i/(mr.length-1)*plotW} function Y(v){return b-v/max*plotH}
+  ctx.beginPath(); mr.forEach((v,i)=>{const x=X(i),y=Y(v); if(i==0)ctx.moveTo(x,y); else ctx.lineTo(x,y)}); ctx.strokeStyle="#ffcc00";ctx.lineWidth=2;ctx.stroke();
+  txt(ctx,`MR avg ${fmt(mean(mr),5)}`,w-40,h-18,"#a9b0bb","right");
+}
+
+$("analyse").onclick=calc;
+$("clear").onclick=()=>{$("data").value="";calc()};
+$("loadSample").onclick=async()=>{try{const r=await fetch("sample-data.csv");$("data").value=await r.text()}catch{$("data").value=sampleInline}calc()};
+$("importBtn").onclick=()=>$("file").click();
+$("file").onchange=e=>{const f=e.target.files[0]; if(!f)return; const reader=new FileReader(); reader.onload=()=>{$("data").value=reader.result;calc()}; reader.readAsText(f)};
+$("exportBtn").onclick=()=>{const blob=new Blob([$("data").value],{type:"text/csv"}); const a=document.createElement("a"); a.href=URL.createObjectURL(blob); a.download="spc-data.csv"; a.click(); URL.revokeObjectURL(a.href)};
+$("saveLocal").onclick=()=>{localStorage.setItem("spcAnalysis",JSON.stringify({data:$("data").value,lsl:$("lsl").value,usl:$("usl").value,target:$("target").value,subgroup:$("subgroup").value})); alert("Analysis saved on this device.")};
+$("loadLocal").onclick=()=>{const s=localStorage.getItem("spcAnalysis"); if(!s)return alert("No saved analysis found."); const o=JSON.parse(s); ["data","lsl","usl","target","subgroup"].forEach(k=>$(k).value=o[k]??$(k).value); calc()};
+document.querySelectorAll(".tab").forEach(b=>b.onclick=()=>{document.querySelectorAll(".tab").forEach(x=>x.classList.remove("active"));b.classList.add("active");document.querySelectorAll(".page").forEach(p=>p.classList.add("hidden"));$("page-"+b.dataset.page).classList.remove("hidden")});
+["lsl","usl","target","subgroup","data"].forEach(id=>$(id).addEventListener("input",()=>{clearTimeout(window.__t);window.__t=setTimeout(calc,200)}));
+if("serviceWorker" in navigator){window.addEventListener("load",()=>navigator.serviceWorker.register("./service-worker.js"))}
+$("loadSample").click();
 </script>
-</body></html>
+</body>
+</html>
