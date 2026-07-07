@@ -22,7 +22,16 @@ canvas{width:100%;height:300px;background:#14171b;border:1px solid var(--line);b
 </head>
 <body><div class="app">
 <div class="header"><div class="brand"><div class="logo">ET</div><div><h1>Engineering Toolkit</h1><div class="subtitle">SPC training · trigonometry · surface speed · installable PWA</div></div></div>
-<div class="tabs"><button class="tab active" data-page="spc">SPC</button><button class="tab" data-page="surface">Surface speed</button><button class="tab" data-page="trig">Trigonometry</button><button class="tab" data-page="toolkit">Toolkit</button><button class="tab" data-page="report">Report</button></div></div>
+<div class="tabs">
+  <label style="margin:0;color:#a9b0bb;font-size:12px;font-weight:800;display:flex;align-items:center;gap:6px">Decimals
+    <select id="decPlaces" style="width:72px;padding:8px">
+      <option value="0">0</option><option value="1">1</option><option value="2">2</option>
+      <option value="3" selected>3</option><option value="4">4</option><option value="5">5</option>
+      <option value="6">6</option>
+    </select>
+  </label>
+  <button class="tab active" data-page="spc">SPC</button><button class="tab" data-page="surface">Surface speed</button><button class="tab" data-page="trig">Trigonometry</button><button class="tab" data-page="toolkit">Toolkit</button><button class="tab" data-page="report">Report</button>
+</div></div>
 
 <section id="page-spc" class="page"><div class="grid">
 <div class="left">
@@ -35,7 +44,12 @@ canvas{width:100%;height:300px;background:#14171b;border:1px solid var(--line);b
 </div></section>
 
 <section id="page-surface" class="page hidden"><div class="grid2">
-<div class="panel"><h2>Surface speed calculator</h2><div class="row"><div><label>Diameter Ø mm</label><input id="ssDia" type="number" step="0.001" value="10"></div><div><label>Radius mm</label><input id="ssRad" type="number" step="0.001"></div></div><div class="row"><div><label>RPM</label><input id="ssRpm" type="number" step="1" value="12000"></div><div><label>Surface speed m/sec</label><input id="ssMs" type="number" step="0.001"></div></div><div class="buttons"><button class="btn primary" id="ssCalc">Calculate missing</button><button class="btn" id="ssClear">Clear</button></div><p class="note">Formula: surface speed m/sec = π × diameter(mm) × RPM ÷ 60000. Enter any two main values to calculate the missing one.</p></div>
+<div class="panel"><h2>Surface speed calculator</h2>
+<div class="row"><div><label>Diameter Ø mm</label><input id="ssDia" type="number" step="0.001" value="10"></div><div><label>Radius mm</label><input id="ssRad" type="number" step="0.001"></div></div>
+<div class="row"><div><label>RPM</label><input id="ssRpm" type="number" step="1" value="12000"></div><div><label>Speed unit</label><select id="ssUnit"><option value="msec">m/sec</option><option value="mmin">m/min</option></select></div></div>
+<label id="ssSpeedLabel">Surface speed m/sec</label><input id="ssMs" type="number" step="0.001">
+<div class="buttons"><button class="btn primary" id="ssCalc">Calculate missing</button><button class="btn" id="ssClear">Clear</button></div>
+<p class="note">Formula: m/min = π × diameter(mm) × RPM ÷ 1000. m/sec = m/min ÷ 60. Enter any two main values to calculate the missing one.</p></div>
 <div><div class="panel"><h2>Result</h2><div id="ssAnswer" class="answer">—</div><div id="ssSummary" class="resultsList"></div></div><div class="panel" style="margin-top:16px"><h2>Visual</h2><svg class="moduleSvg" id="ssSvg" viewBox="0 0 800 360"></svg></div></div></div></section>
 
 <section id="page-trig" class="page hidden"><div class="grid2">
@@ -49,7 +63,8 @@ canvas{width:100%;height:300px;background:#14171b;border:1px solid var(--line);b
 <script>
 const SAMPLE_META = [{"file": "sample-01.csv", "name": "Training 01 - Capable centred process", "lsl": 9.9, "usl": 10.1}, {"file": "sample-02.csv", "name": "Training 02 - Capable but off-centre high", "lsl": 9.9, "usl": 10.1}, {"file": "sample-03.csv", "name": "Training 03 - Marginal process", "lsl": 9.9, "usl": 10.1}, {"file": "sample-04.csv", "name": "Training 04 - Not capable / high variation", "lsl": 9.9, "usl": 10.1}, {"file": "sample-05.csv", "name": "Training 05 - Drift over time", "lsl": 9.9, "usl": 10.1}, {"file": "sample-06.csv", "name": "Training 06 - Outliers included", "lsl": 9.9, "usl": 10.1}];
 const $ = id => document.getElementById(id);
-function fmt(x,d=4){return Number.isFinite(x)?Number(x).toFixed(d):"—"}
+function getDec(){const el=document.getElementById("decPlaces"); return el?Number(el.value):3}
+function fmt(x,d=null){return Number.isFinite(x)?Number(x).toFixed(d===null?getDec():d):"—"}
 function parseValues(text){return text.split(/[\s,;\t]+/).map(x=>Number(x.trim())).filter(x=>Number.isFinite(x));}
 function mean(a){return a.reduce((s,x)=>s+x,0)/a.length} function sd(a,sample=true){const m=mean(a),v=a.reduce((s,x)=>s+(x-m)*(x-m),0)/(a.length-(sample?1:0));return Math.sqrt(Math.max(0,v))}
 function erf(x){const s=x<0?-1:1; x=Math.abs(x); const a1=.254829592,a2=-.284496736,a3=1.421413741,a4=-1.453152027,a5=1.061405429,p=.3275911; const t=1/(1+p*x); return s*(1-(((((a5*t+a4)*t)+a3)*t+a2)*t+a1)*t*Math.exp(-x*x));}
@@ -69,7 +84,7 @@ $("analyse").onclick=calc;$("clear").onclick=()=>{$("data").value="";calc()};$("
 
 function ssCalc(){let d=Number($("ssDia").value),r=Number($("ssRad").value),rpm=Number($("ssRpm").value),ms=Number($("ssMs").value); if(!d&&r)d=2*r; if(d&&!r)r=d/2; if(d&&rpm&&!ms)ms=Math.PI*d*rpm/60000; else if(d&&ms&&!rpm)rpm=ms*60000/(Math.PI*d); else if(rpm&&ms&&!d){d=ms*60000/(Math.PI*rpm);r=d/2} $("ssDia").value=d?fmt(d,3):"";$("ssRad").value=r?fmt(r,3):"";$("ssRpm").value=rpm?fmt(rpm,0):"";$("ssMs").value=ms?fmt(ms,4):"";$("ssAnswer").textContent=ms?fmt(ms,4)+" m/sec":"—";$("ssSummary").innerHTML=`Diameter: <b>${fmt(d,3)} mm</b><br>Radius: <b>${fmt(r,3)} mm</b><br>RPM: <b>${fmt(rpm,0)}</b><br>Surface speed: <b>${fmt(ms,4)} m/sec</b>`;drawSS(d,rpm,ms)}
 function drawSS(d,rpm,ms){const svg=$("ssSvg");svg.innerHTML=`<circle cx="400" cy="170" r="95" fill="#20242a" stroke="#ffcc00" stroke-width="5"/><line x1="400" y1="170" x2="495" y2="170" stroke="#69b7ff" stroke-width="4"/><text x="410" y="155" fill="#69b7ff">R ${fmt(d/2,2)} mm</text><path d="M 330 70 A 120 120 0 0 1 505 95" fill="none" stroke="#eef1f5" stroke-width="4"/><polygon points="505,95 485,94 497,112" fill="#eef1f5"/><text x="30" y="315" fill="#a9b0bb">V = π × D × RPM ÷ 60000 = ${fmt(ms,4)} m/sec</text><text x="335" y="178" fill="#eef1f5" font-size="24">${fmt(rpm,0)} rpm</text>`}
-$("ssCalc").onclick=ssCalc;$("ssClear").onclick=()=>{["ssDia","ssRad","ssRpm","ssMs"].forEach(id=>$(id).value="");$("ssAnswer").textContent="—";$("ssSummary").innerHTML="";drawSS(0,0,0)};["ssDia","ssRad","ssRpm","ssMs"].forEach(id=>$(id).addEventListener("blur",()=>{}));
+$("ssCalc").onclick=ssCalc;$("ssClear").onclick=()=>{["ssDia","ssRad","ssRpm","ssMs"].forEach(id=>$(id).value="");$("ssAnswer").textContent="—";$("ssSummary").innerHTML="";drawSS(0,0,0,0,"m/sec",0)};$("ssUnit").onchange=()=>{const label=$("ssUnit").value==="mmin"?"m/min":"m/sec";$("ssSpeedLabel").textContent="Surface speed "+label;if($("ssMs").value) ssCalc()};["ssDia","ssRad","ssRpm","ssMs"].forEach(id=>$(id).addEventListener("blur",()=>{}));
 
 function deg(x){return x*180/Math.PI}function rad(x){return x*Math.PI/180}
 function trigCalc(){let A=Number($("angA").value),C=Number($("angC").value),a=Number($("sideA").value),b=Number($("sideB").value),c=Number($("sideC").value); if(A&&!C)C=90-A;if(C&&!A)A=90-C;if(a&&c&&!b)b=Math.hypot(a,c); if(a&&b&&!c)c=Math.sqrt(Math.max(0,b*b-a*a)); if(c&&b&&!a)a=Math.sqrt(Math.max(0,b*b-c*c)); if(a&&c){A=deg(Math.atan2(a,c));C=90-A;b=Math.hypot(a,c)} else if(A&&b){a=b*Math.sin(rad(A));c=b*Math.cos(rad(A));C=90-A} else if(C&&b){c=b*Math.sin(rad(C));a=b*Math.cos(rad(C));A=90-C} else if(A&&a){b=a/Math.sin(rad(A));c=b*Math.cos(rad(A));C=90-A} else if(A&&c){b=c/Math.cos(rad(A));a=b*Math.sin(rad(A));C=90-A} else if(C&&c){b=c/Math.sin(rad(C));a=b*Math.cos(rad(C));A=90-C} else if(C&&a){b=a/Math.cos(rad(C));c=b*Math.sin(rad(C));A=90-C} $("angA").value=A?fmt(A,4):"";$("angC").value=C?fmt(C,4):"";$("sideA").value=a?fmt(a,4):"";$("sideB").value=b?fmt(b,4):"";$("sideC").value=c?fmt(c,4):"";$("trigAnswer").innerHTML=`Angle A: <b>${fmt(A,4)}°</b><br>Angle B: <b>90°</b><br>Angle C: <b>${fmt(C,4)}°</b><br>Side a: <b>${fmt(a,4)}</b><br>Side b / hypotenuse: <b>${fmt(b,4)}</b><br>Side c: <b>${fmt(c,4)}</b>`; drawTrig(a,b,c,A,C)}
@@ -112,8 +127,14 @@ function drawTrig(a,b,c,A,C){
     ${angleText(x0+16, y0-12, `B 90°`, "start")}
   `;
 }
-$("trigCalc").onclick=trigCalc;$("trigClear").onclick=()=>{["angA","angC","sideA","sideB","sideC"].forEach(id=>$(id).value="");$("angB").value=90;$("trigAnswer").innerHTML="";drawTrig(0,0,0,0,0)};$("trigSample").onclick=()=>{$("sideA").value=3;$("sideC").value=4;$("sideB").value="";$("angA").value="";$("angC").value="";trigCalc()};$("angA").addEventListener("blur",()=>{const A=Number($("angA").value); if(A>0 && A<90 && !$("angC").value) $("angC").value=fmt(90-A,4)});$("angC").addEventListener("blur",()=>{const C=Number($("angC").value); if(C>0 && C<90 && !$("angA").value) $("angA").value=fmt(90-C,4)});
+$("trigCalc").onclick=trigCalc;$("trigClear").onclick=()=>{["angA","angC","sideA","sideB","sideC"].forEach(id=>$(id).value="");$("angB").value=90;$("trigAnswer").innerHTML="";drawTrig(0,0,0,0,0)};$("trigSample").onclick=()=>{$("sideA").value=3;$("sideC").value=4;$("sideB").value="";$("angA").value="";$("angC").value="";trigCalc()};$("angA").addEventListener("blur",()=>{const A=Number($("angA").value); if(A>0 && A<90 && !$("angC").value) $("angC").value=fmt(90-A)});$("angC").addEventListener("blur",()=>{const C=Number($("angC").value); if(C>0 && C<90 && !$("angA").value) $("angA").value=fmt(90-C)});
 
+$("decPlaces").addEventListener("change",()=>{
+  calc();
+  if(document.activeElement && ["ssDia","ssRad","ssRpm","ssMs","angA","angC","sideA","sideB","sideC"].includes(document.activeElement.id)) return;
+  ssCalc();
+  trigCalc();
+});
 document.querySelectorAll(".tab").forEach(b=>b.onclick=()=>showPage(b.dataset.page));document.querySelectorAll(".hex[data-go]").forEach(h=>h.onclick=()=>showPage(h.dataset.go));function showPage(p){document.querySelectorAll(".tab").forEach(x=>x.classList.toggle("active",x.dataset.page==p));document.querySelectorAll(".page").forEach(x=>x.classList.add("hidden"));$("page-"+p).classList.remove("hidden")}
 ["lsl","usl","target","subgroup","data"].forEach(id=>$(id).addEventListener("input",()=>{clearTimeout(window.__t);window.__t=setTimeout(calc,200)}));
 if("serviceWorker" in navigator){window.addEventListener("load",()=>navigator.serviceWorker.register("./service-worker.js"))}

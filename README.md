@@ -18,3 +18,8 @@ v3 fixes:
 v4 fixes:
 - Trigonometry visual now centres/scales better.
 - Triangle labels moved outside with stroke-backed text for readability.
+
+
+v5 updates:
+- Added global decimal-place selector.
+- Surface speed can now display/calculate in m/sec or m/min.
