@@ -1,4 +1,4 @@
-const CACHE_NAME = 'engineering-toolkit-v3';
+const CACHE_NAME = 'engineering-toolkit-v4';
 const APP_FILES = [
   "./",
   "./index.html",
