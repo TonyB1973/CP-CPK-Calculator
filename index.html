@@ -73,7 +73,45 @@ $("ssCalc").onclick=ssCalc;$("ssClear").onclick=()=>{["ssDia","ssRad","ssRpm","s
 
 function deg(x){return x*180/Math.PI}function rad(x){return x*Math.PI/180}
 function trigCalc(){let A=Number($("angA").value),C=Number($("angC").value),a=Number($("sideA").value),b=Number($("sideB").value),c=Number($("sideC").value); if(A&&!C)C=90-A;if(C&&!A)A=90-C;if(a&&c&&!b)b=Math.hypot(a,c); if(a&&b&&!c)c=Math.sqrt(Math.max(0,b*b-a*a)); if(c&&b&&!a)a=Math.sqrt(Math.max(0,b*b-c*c)); if(a&&c){A=deg(Math.atan2(a,c));C=90-A;b=Math.hypot(a,c)} else if(A&&b){a=b*Math.sin(rad(A));c=b*Math.cos(rad(A));C=90-A} else if(C&&b){c=b*Math.sin(rad(C));a=b*Math.cos(rad(C));A=90-C} else if(A&&a){b=a/Math.sin(rad(A));c=b*Math.cos(rad(A));C=90-A} else if(A&&c){b=c/Math.cos(rad(A));a=b*Math.sin(rad(A));C=90-A} else if(C&&c){b=c/Math.sin(rad(C));a=b*Math.cos(rad(C));A=90-C} else if(C&&a){b=a/Math.cos(rad(C));c=b*Math.sin(rad(C));A=90-C} $("angA").value=A?fmt(A,4):"";$("angC").value=C?fmt(C,4):"";$("sideA").value=a?fmt(a,4):"";$("sideB").value=b?fmt(b,4):"";$("sideC").value=c?fmt(c,4):"";$("trigAnswer").innerHTML=`Angle A: <b>${fmt(A,4)}°</b><br>Angle B: <b>90°</b><br>Angle C: <b>${fmt(C,4)}°</b><br>Side a: <b>${fmt(a,4)}</b><br>Side b / hypotenuse: <b>${fmt(b,4)}</b><br>Side c: <b>${fmt(c,4)}</b>`; drawTrig(a,b,c,A,C)}
-function drawTrig(a,b,c,A,C){const svg=$("trigSvg"); const scale=260/Math.max(a||1,c||1); const x0=170,y0=285,x1=x0+(c||1)*scale,y1=y0,x2=x0,y2=y0-(a||1)*scale; svg.innerHTML=`<polygon points="${x0},${y0} ${x1},${y1} ${x2},${y2}" fill="#20242a" stroke="#ffcc00" stroke-width="5"/><path d="M ${x0+28} ${y0} L ${x0+28} ${y0-28} L ${x0} ${y0-28}" fill="none" stroke="#eef1f5" stroke-width="3"/><text x="${(x0+x2)/2-55}" y="${(y0+y2)/2}" fill="#69b7ff">a = ${fmt(a,3)}</text><text x="${(x0+x1)/2}" y="${y0+30}" fill="#69b7ff">c = ${fmt(c,3)}</text><text x="${(x1+x2)/2+20}" y="${(y1+y2)/2}" fill="#69b7ff">b = ${fmt(b,3)}</text><text x="${x1-30}" y="${y1-15}" fill="#eef1f5">A ${fmt(A,2)}°</text><text x="${x2+12}" y="${y2+28}" fill="#eef1f5">C ${fmt(C,2)}°</text><text x="${x0+8}" y="${y0-8}" fill="#eef1f5">B 90°</text>`}
+function drawTrig(a,b,c,A,C){
+  const svg=$("trigSvg");
+  a = Number(a)||0; b = Number(b)||0; c = Number(c)||0; A = Number(A)||0; C = Number(C)||0;
+
+  const W=800, H=360;
+  const padL=125, padR=125, padT=70, padB=70;
+  const safeA = Math.max(a, 1);
+  const safeC = Math.max(c, 1);
+
+  const scale = Math.min((W-padL-padR)/safeC, (H-padT-padB)/safeA);
+  const triW = safeC * scale;
+  const triH = safeA * scale;
+
+  // Centre triangle in the view, with room around it for labels
+  const x0 = (W - triW) / 2;
+  const y0 = (H + triH) / 2 - 10;
+  const x1 = x0 + triW;
+  const y1 = y0;
+  const x2 = x0;
+  const y2 = y0 - triH;
+
+  const labelBox = (x,y,text,anchor="middle") => 
+    `<text x="${x}" y="${y}" fill="#69b7ff" font-size="18" font-weight="700" text-anchor="${anchor}" paint-order="stroke" stroke="#14171b" stroke-width="5" stroke-linejoin="round">${text}</text>`;
+  const angleText = (x,y,text,anchor="middle") =>
+    `<text x="${x}" y="${y}" fill="#eef1f5" font-size="17" font-weight="800" text-anchor="${anchor}" paint-order="stroke" stroke="#14171b" stroke-width="5" stroke-linejoin="round">${text}</text>`;
+
+  svg.innerHTML=`
+    <polygon points="${x0},${y0} ${x1},${y1} ${x2},${y2}" fill="#20242a" stroke="#ffcc00" stroke-width="5"/>
+    <path d="M ${x0+30} ${y0} L ${x0+30} ${y0-30} L ${x0} ${y0-30}" fill="none" stroke="#eef1f5" stroke-width="3"/>
+
+    ${labelBox(x0-42, (y0+y2)/2, `a = ${fmt(a,3)}`, "end")}
+    ${labelBox((x0+x1)/2, y0+42, `c = ${fmt(c,3)}`)}
+    ${labelBox((x1+x2)/2+52, (y1+y2)/2-16, `b = ${fmt(b,3)}`, "start")}
+
+    ${angleText(x1-12, y1-24, `A ${fmt(A,2)}°`, "end")}
+    ${angleText(x2+18, y2+30, `C ${fmt(C,2)}°`, "start")}
+    ${angleText(x0+16, y0-12, `B 90°`, "start")}
+  `;
+}
 $("trigCalc").onclick=trigCalc;$("trigClear").onclick=()=>{["angA","angC","sideA","sideB","sideC"].forEach(id=>$(id).value="");$("angB").value=90;$("trigAnswer").innerHTML="";drawTrig(0,0,0,0,0)};$("trigSample").onclick=()=>{$("sideA").value=3;$("sideC").value=4;$("sideB").value="";$("angA").value="";$("angC").value="";trigCalc()};$("angA").addEventListener("blur",()=>{const A=Number($("angA").value); if(A>0 && A<90 && !$("angC").value) $("angC").value=fmt(90-A,4)});$("angC").addEventListener("blur",()=>{const C=Number($("angC").value); if(C>0 && C<90 && !$("angA").value) $("angA").value=fmt(90-C,4)});
 
 document.querySelectorAll(".tab").forEach(b=>b.onclick=()=>showPage(b.dataset.page));document.querySelectorAll(".hex[data-go]").forEach(h=>h.onclick=()=>showPage(h.dataset.go));function showPage(p){document.querySelectorAll(".tab").forEach(x=>x.classList.toggle("active",x.dataset.page==p));document.querySelectorAll(".page").forEach(x=>x.classList.add("hidden"));$("page-"+p).classList.remove("hidden")}
