@@ -1,11 +1,10 @@
 {
   "name": "Engineering Toolkit",
   "short_name": "Eng Toolkit",
-  "start_url": "./index.html",
+  "start_url": "./index.html?v=10",
   "display": "standalone",
-  "background_color": "#202226",
+  "background_color": "#1f2227",
   "theme_color": "#ffcc00",
-  "description": "Engineering toolkit with SPC Cp/Cpk, trigonometry and surface speed calculators.",
   "icons": [
     {
       "src": "icon-192.png",

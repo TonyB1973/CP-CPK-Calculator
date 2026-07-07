@@ -1,41 +1,13 @@
-# Engineering Toolkit PWA v2
+# Engineering Toolkit PWA v10
 
-Includes:
-- SPC Cp/Cpk calculator
-- Multiple training sample datasets
-- Surface speed calculator
-- Right-angle trigonometry calculator
-- Offline PWA support
+Clean rebuild with separate files:
+- index.html
+- styles.css
+- app.js
+- manifest.webmanifest
+- service-worker.js
+- sample CSV files
+- icons
 
-Upload all files to the root of your GitHub repository and keep GitHub Pages set to main / root.
-
-
-v3 fixes:
-- Surface speed and trigonometry inputs no longer auto-format while typing.
-- SPC sample dropdown auto-loads and refreshes charts immediately.
-
-
-v4 fixes:
-- Trigonometry visual now centres/scales better.
-- Triangle labels moved outside with stroke-backed text for readability.
-
-
-v5 updates:
-- Added global decimal-place selector.
-- Surface speed can now display/calculate in m/sec or m/min.
-
-
-v6 fixes:
-- Decimal selector now re-renders current SPC, surface speed and trigonometry results immediately.
-- Displayed values now consistently use the selected decimal places.
-
-
-v7 fixes:
-- Decimal dropdown now refreshes Surface Speed and Trigonometry using stored calculation state.
-
-
-v9 layout:
-- App now uses more of the screen height.
-- Header reduced.
-- Charts and SVG visuals enlarged.
-- Surface speed and triangle pages fill the screen better.
+Upload all files to the root of your GitHub repository.
+Then refresh GitHub Pages with ?v=10.
