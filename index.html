@@ -58,9 +58,10 @@ canvas{width:100%;height:300px;background:#14171b;border:1px solid var(--line);b
 
 <section id="page-toolkit" class="page hidden"><div class="panel" style="margin-top:16px"><h2>Engineering Toolkit Launcher</h2><div class="honey"><div class="hex active" data-go="spc"><strong>SPC</strong><span>Cp, Cpk, training data</span></div><div class="hex active" data-go="trig"><strong>Trigonometry</strong><span>Right triangle solver</span></div><div class="hex active" data-go="surface"><strong>Surface Speed</strong><span>m/sec, diameter, RPM</span></div><div class="hex"><strong>Bolt Circle</strong><span>Coming next</span></div><div class="hex"><strong>Unit Converter</strong><span>Coming next</span></div><div class="hex"><strong>Six Point Align</strong><span>Future module</span></div></div></div></section>
 <section id="page-report" class="page hidden"><div class="panel" style="margin-top:16px"><h2>Printable SPC report</h2><div class="buttons"><button class="btn primary" onclick="window.print()">Print / Save PDF</button></div><div id="reportBody" class="resultsList" style="margin-top:14px"></div></div></section>
-<div class="footer">Engineering Toolkit PWA · GitHub Pages compatible · Safari Home Screen ready</div></div>
+<div class="footer">Engineering Toolkit PWA · GitHub Pages compatible · Safari Home Screen ready · v8</div></div>
 
 <script>
+let DECIMAL_REFRESHING=false;
 let CURRENT_SPC=null;
 let CURRENT_SS=null;
 let CURRENT_TRIG=null;
@@ -107,13 +108,47 @@ async function loadSample(i){const m=SAMPLE_META[i]; $("lsl").value=m.lsl; $("us
 SAMPLE_META.forEach((m,i)=>$("sampleSelect").innerHTML+=`<option value="${i}">${m.name}</option>`); $("loadSelectedSample").onclick=()=>loadSample(Number($("sampleSelect").value)); $("sampleSelect").onchange=()=>loadSample(Number($("sampleSelect").value));
 $("analyse").onclick=calc;$("clear").onclick=()=>{$("data").value="";calc()};$("importBtn").onclick=()=>$("file").click();$("file").onchange=e=>{const f=e.target.files[0];if(!f)return;const reader=new FileReader();reader.onload=()=>{$("data").value=reader.result;calc()};reader.readAsText(f)};$("exportBtn").onclick=()=>{const blob=new Blob([$("data").value],{type:"text/csv"}),a=document.createElement("a");a.href=URL.createObjectURL(blob);a.download="spc-data.csv";a.click();URL.revokeObjectURL(a.href)};$("saveLocal").onclick=()=>{localStorage.setItem("spcAnalysis",JSON.stringify({data:$("data").value,lsl:$("lsl").value,usl:$("usl").value,target:$("target").value,subgroup:$("subgroup").value}));alert("Saved on this device.")};$("loadLocal").onclick=()=>{const s=localStorage.getItem("spcAnalysis");if(!s)return alert("No saved analysis found.");const o=JSON.parse(s);["data","lsl","usl","target","subgroup"].forEach(k=>$(k).value=o[k]??$(k).value);calc()}
 
-function ssCalc(){let d=Number($("ssDia").value),r=Number($("ssRad").value),rpm=Number($("ssRpm").value),ms=Number($("ssMs").value); if(!d&&r)d=2*r; if(d&&!r)r=d/2; if(d&&rpm&&!ms)ms=Math.PI*d*rpm/60000; else if(d&&ms&&!rpm)rpm=ms*60000/(Math.PI*d); else if(rpm&&ms&&!d){d=ms*60000/(Math.PI*rpm);r=d/2} $("ssDia").value=d?fmt(d,3):"";$("ssRad").value=r?fmt(r,3):"";$("ssRpm").value=rpm?fmt(rpm,0):"";$("ssMs").value=ms?fmt(ms,4):"";$("ssAnswer").textContent=ms?fmt(ms,4)+" m/sec":"—";$("ssSummary").innerHTML=`Diameter: <b>${fmt(d,3)} mm</b><br>Radius: <b>${fmt(r,3)} mm</b><br>RPM: <b>${fmt(rpm,0)}</b><br>Surface speed: <b>${fmt(ms,4)} m/sec</b>`;drawSS(d,rpm,ms)}
+function ssCalc(){
+  let d=Number($("ssDia").value), r=Number($("ssRad").value), rpm=Number($("ssRpm").value), speedInput=Number($("ssMs").value);
+  const unit=$("ssUnit").value;
+  let mmin = unit==="mmin" ? speedInput : speedInput*60;
+
+  if(CURRENT_SS && DECIMAL_REFRESHING){
+    d=CURRENT_SS.d; r=CURRENT_SS.r; rpm=CURRENT_SS.rpm; mmin=CURRENT_SS.mmin;
+  }
+
+  if(!d&&r)d=2*r;
+  if(d&&!r)r=d/2;
+  if(d&&rpm&&!mmin)mmin=Math.PI*d*rpm/1000;
+  else if(d&&mmin&&!rpm)rpm=mmin*1000/(Math.PI*d);
+  else if(rpm&&mmin&&!d){d=mmin*1000/(Math.PI*rpm);r=d/2}
+
+  const msec=mmin/60;
+  const displaySpeed = unit==="mmin" ? mmin : msec;
+  const displayUnit = unit==="mmin" ? "m/min" : "m/sec";
+
+  CURRENT_SS={d,r,rpm,msec,mmin,displayUnit,displaySpeed,unit};
+
+  $("ssSpeedLabel").textContent="Surface speed " + displayUnit;
+  $("ssDia").value=d?fmt(d):"";
+  $("ssRad").value=r?fmt(r):"";
+  $("ssRpm").value=rpm?fmt(rpm,0):"";
+  $("ssMs").value=displaySpeed?fmt(displaySpeed):"";
+  $("ssAnswer").textContent=displaySpeed?fmt(displaySpeed)+" "+displayUnit:"—";
+  $("ssSummary").innerHTML=`Diameter: <b>${fmt(d)} mm</b><br>Radius: <b>${fmt(r)} mm</b><br>RPM: <b>${fmt(rpm,0)}</b><br>Surface speed: <b>${fmt(msec)} m/sec</b><br>Surface speed: <b>${fmt(mmin)} m/min</b>`;
+  drawSS(d,rpm,msec,mmin,displayUnit,displaySpeed);
+}
 function drawSS(d,rpm,ms){const svg=$("ssSvg");svg.innerHTML=`<circle cx="400" cy="170" r="95" fill="#20242a" stroke="#ffcc00" stroke-width="5"/><line x1="400" y1="170" x2="495" y2="170" stroke="#69b7ff" stroke-width="4"/><text x="410" y="155" fill="#69b7ff">R ${fmt(d/2,2)} mm</text><path d="M 330 70 A 120 120 0 0 1 505 95" fill="none" stroke="#eef1f5" stroke-width="4"/><polygon points="505,95 485,94 497,112" fill="#eef1f5"/><text x="30" y="315" fill="#a9b0bb">V = π × D × RPM ÷ 60000 = ${fmt(ms,4)} m/sec</text><text x="335" y="178" fill="#eef1f5" font-size="24">${fmt(rpm,0)} rpm</text>`}
-$("ssCalc").onclick=ssCalc;$("ssClear").onclick=()=>{["ssDia","ssRad","ssRpm","ssMs"].forEach(id=>$(id).value="");$("ssAnswer").textContent="—";$("ssSummary").innerHTML="";CURRENT_SS=null;drawSS(0,0,0,0,"m/sec",0)};$("ssUnit").onchange=()=>{if(CURRENT_SS){const val=$("ssUnit").value==="mmin"?CURRENT_SS.mmin:CURRENT_SS.msec; $("ssMs").value=fmt(val); ssCalc();} else {const label=$("ssUnit").value==="mmin"?"m/min":"m/sec";$("ssSpeedLabel").textContent="Surface speed "+label;}};["ssDia","ssRad","ssRpm","ssMs"].forEach(id=>$(id).addEventListener("blur",()=>{}));
+$("ssCalc").onclick=ssCalc;$("ssClear").onclick=()=>{["ssDia","ssRad","ssRpm","ssMs"].forEach(id=>$(id).value="");$("ssAnswer").textContent="—";$("ssSummary").innerHTML="";CURRENT_SS=null;drawSS(0,0,0,0,"m/sec",0)};$("ssUnit").onchange=()=>{if(CURRENT_SS){$("ssMs").value=$("ssUnit").value==="mmin"?CURRENT_SS.mmin:CURRENT_SS.msec; ssCalc();}else{$("ssSpeedLabel").textContent="Surface speed "+($("ssUnit").value==="mmin"?"m/min":"m/sec");}};["ssDia","ssRad","ssRpm","ssMs"].forEach(id=>$(id).addEventListener("blur",()=>{}));
 
 function deg(x){return x*180/Math.PI}function rad(x){return x*Math.PI/180}
 function trigCalc(){
   let A=Number($("angA").value),C=Number($("angC").value),a=Number($("sideA").value),b=Number($("sideB").value),c=Number($("sideC").value);
+
+  if(CURRENT_TRIG && DECIMAL_REFRESHING){
+    A=CURRENT_TRIG.A; C=CURRENT_TRIG.C; a=CURRENT_TRIG.a; b=CURRENT_TRIG.b; c=CURRENT_TRIG.c;
+  }
+
   if(A&&!C)C=90-A;if(C&&!A)A=90-C;
   if(a&&c&&!b)b=Math.hypot(a,c);
   if(a&&b&&!c)c=Math.sqrt(Math.max(0,b*b-a*a));
@@ -125,8 +160,16 @@ function trigCalc(){
   else if(A&&c){b=c/Math.cos(rad(A));a=b*Math.sin(rad(A));C=90-A}
   else if(C&&c){b=c/Math.sin(rad(C));a=b*Math.cos(rad(C));A=90-C}
   else if(C&&a){b=a/Math.cos(rad(C));c=b*Math.sin(rad(C));A=90-C}
+
   CURRENT_TRIG={a,b,c,A,C};
-  refreshTrigDisplay();
+
+  $("angA").value=A?fmt(A):"";
+  $("angC").value=C?fmt(C):"";
+  $("sideA").value=a?fmt(a):"";
+  $("sideB").value=b?fmt(b):"";
+  $("sideC").value=c?fmt(c):"";
+  $("trigAnswer").innerHTML=`Angle A: <b>${fmt(A)}°</b><br>Angle B: <b>90°</b><br>Angle C: <b>${fmt(C)}°</b><br>Side a: <b>${fmt(a)}</b><br>Side b / hypotenuse: <b>${fmt(b)}</b><br>Side c: <b>${fmt(c)}</b>`;
+  drawTrig(a,b,c,A,C);
 }
 function drawTrig(a,b,c,A,C){
   const svg=$("trigSvg");
@@ -171,8 +214,11 @@ $("trigCalc").onclick=trigCalc;$("trigClear").onclick=()=>{["angA","angC","sideA
 
 $("decPlaces").addEventListener("change",()=>{
   if(CURRENT_SPC) render(CURRENT_SPC); else calc();
-  refreshSurfaceDisplay();
-  refreshTrigDisplay();
+
+  DECIMAL_REFRESHING=true;
+  if(CURRENT_SS) ssCalc();
+  if(CURRENT_TRIG) trigCalc();
+  DECIMAL_REFRESHING=false;
 });
 document.querySelectorAll(".tab").forEach(b=>b.onclick=()=>showPage(b.dataset.page));document.querySelectorAll(".hex[data-go]").forEach(h=>h.onclick=()=>showPage(h.dataset.go));function showPage(p){document.querySelectorAll(".tab").forEach(x=>x.classList.toggle("active",x.dataset.page==p));document.querySelectorAll(".page").forEach(x=>x.classList.add("hidden"));$("page-"+p).classList.remove("hidden")}
 ["lsl","usl","target","subgroup","data"].forEach(id=>$(id).addEventListener("input",()=>{clearTimeout(window.__t);window.__t=setTimeout(calc,200)}));
