@@ -1,0 +1,78 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <meta name="theme-color" content="#f2c230" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+  <meta name="apple-mobile-web-app-title" content="CP CPK" />
+  <link rel="manifest" href="manifest.webmanifest" />
+  <link rel="apple-touch-icon" href="icon-192.png" />
+  <title>CP / CPK Calculator</title>
+  <style>
+    :root{
+      --bg:#17191c; --panel:#24282d; --panel2:#1e2227; --line:#3a4149; --text:#f2f4f7;
+      --muted:#aeb7c2; --yellow:#f2c230; --green:#52d273; --red:#ff5a5f; --blue:#74b9ff;
+      --shadow: 0 16px 44px rgba(0,0,0,.35); --radius:18px;
+    }
+    *{box-sizing:border-box} html,body{height:100%}
+    body{margin:0;background:radial-gradient(circle at top left,#2a2f36 0,#17191c 34%,#101214 100%);color:var(--text);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Arial,sans-serif;}
+    .app{min-height:100%;padding:calc(14px + env(safe-area-inset-top)) 14px calc(18px + env(safe-area-inset-bottom));max-width:1260px;margin:auto}
+    header{display:flex;align-items:center;gap:14px;margin-bottom:14px}.logo{width:48px;height:48px;border-radius:14px;background:linear-gradient(135deg,var(--yellow),#ffd966);display:grid;place-items:center;color:#1a1a1a;font-weight:900;box-shadow:var(--shadow)}
+    h1{font-size:clamp(22px,4vw,34px);margin:0}.subtitle{color:var(--muted);font-size:14px;margin-top:3px}.grid{display:grid;grid-template-columns:390px 1fr;gap:14px}.panel{background:linear-gradient(180deg,var(--panel),var(--panel2));border:1px solid var(--line);border-radius:var(--radius);box-shadow:var(--shadow);overflow:hidden}.panel h2{font-size:15px;letter-spacing:.08em;text-transform:uppercase;margin:0;padding:13px 15px;border-bottom:1px solid var(--line);color:var(--yellow)}.body{padding:14px}
+    label{display:block;font-size:12px;text-transform:uppercase;letter-spacing:.08em;color:var(--muted);margin:10px 0 6px}input,textarea,button{font:inherit}input,textarea{width:100%;border:1px solid #47505b;background:#121518;color:var(--text);border-radius:12px;padding:11px 12px;outline:none}textarea{min-height:220px;resize:vertical;line-height:1.35}.row{display:grid;grid-template-columns:1fr 1fr;gap:10px}.buttons{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:12px}button{border:0;border-radius:13px;padding:12px 10px;font-weight:800;cursor:pointer;background:#303741;color:var(--text);border:1px solid #48515b}.primary{background:var(--yellow);color:#151515;border-color:#f8d35c}.danger{background:#3a2225;border-color:#7d3339;color:#ffd8db}.small{font-size:13px;padding:9px 10px}.hint{font-size:12px;color:var(--muted);line-height:1.35;margin-top:10px}.kpis{display:grid;grid-template-columns:repeat(4,1fr);gap:12px}.kpi{background:#15191d;border:1px solid var(--line);border-radius:16px;padding:13px}.kpi .name{color:var(--muted);font-size:12px;text-transform:uppercase;letter-spacing:.08em}.kpi .val{font-size:28px;font-weight:900;margin-top:6px}.ok{color:var(--green)}.bad{color:var(--red)}.warn{color:var(--yellow)}canvas{width:100%;height:330px;background:#101316;border:1px solid var(--line);border-radius:16px;margin-top:12px}.tableWrap{overflow:auto;max-height:240px;border:1px solid var(--line);border-radius:14px;margin-top:12px}table{width:100%;border-collapse:collapse;font-size:13px}th,td{padding:9px;border-bottom:1px solid #303740;text-align:right}th:first-child,td:first-child{text-align:left}th{position:sticky;top:0;background:#20252b;color:var(--yellow)}.status{display:inline-flex;gap:8px;align-items:center;border:1px solid var(--line);background:#14181c;border-radius:999px;padding:8px 12px;color:var(--muted);font-size:12px}.dot{width:9px;height:9px;border-radius:50%;background:var(--green)}.topbar{display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap;margin-bottom:12px}.pill{padding:5px 9px;border:1px solid #4b535e;border-radius:999px;color:var(--muted);font-size:12px}.file{position:relative;overflow:hidden}.file input{position:absolute;inset:0;opacity:0;cursor:pointer}@media(max-width:900px){.grid{grid-template-columns:1fr}.kpis{grid-template-columns:repeat(2,1fr)}textarea{min-height:170px}}@media(max-width:460px){.app{padding-left:10px;padding-right:10px}.kpis{grid-template-columns:1fr 1fr}.kpi .val{font-size:23px}.buttons{grid-template-columns:1fr}.row{grid-template-columns:1fr}canvas{height:280px}}
+  </style>
+</head>
+<body>
+<div class="app">
+  <header><div class="logo">Cp</div><div><h1>CP / CPK Calculator</h1><div class="subtitle">Offline PWA • sample data • histogram • industry-standard within-subgroup estimate using overall sample standard deviation</div></div></header>
+  <div class="grid">
+    <section class="panel"><h2>01 — Input</h2><div class="body">
+      <div class="row"><div><label>Lower spec limit</label><input id="lsl" type="number" step="0.0001" value="9.90"></div><div><label>Upper spec limit</label><input id="usl" type="number" step="0.0001" value="10.10"></div></div>
+      <label>Measured values</label><textarea id="data" spellcheck="false" placeholder="Paste values separated by commas, spaces, tabs or new lines"></textarea>
+      <div class="buttons"><button class="primary" id="calc">Calculate</button><button class="danger" id="clear">Clear</button><button class="small" id="sample">Load sample</button><label class="file small" style="text-align:center">Import CSV<input id="file" type="file" accept=".csv,text/csv,text/plain"></label></div>
+      <div class="hint">Formulae: Cp = (USL − LSL) / 6σ. Cpu = (USL − mean) / 3σ. Cpl = (mean − LSL) / 3σ. Cpk = min(Cpu, Cpl).</div>
+    </div></section>
+    <main class="panel"><h2>02 — Capability Result</h2><div class="body">
+      <div class="topbar"><span class="status"><span class="dot"></span><span id="installText">Ready for Safari Home Screen install</span></span><span class="pill" id="countPill">0 values</span></div>
+      <div class="kpis"><div class="kpi"><div class="name">Mean</div><div class="val" id="mean">—</div></div><div class="kpi"><div class="name">Std Dev σ</div><div class="val" id="sd">—</div></div><div class="kpi"><div class="name">Cp</div><div class="val" id="cp">—</div></div><div class="kpi"><div class="name">Cpk</div><div class="val" id="cpk">—</div></div></div>
+      <canvas id="chart" width="1200" height="520"></canvas>
+      <div class="tableWrap"><table><thead><tr><th>Metric</th><th>Value</th></tr></thead><tbody id="metrics"><tr><td>Status</td><td>Enter data and calculate</td></tr></tbody></table></div>
+    </div></main>
+  </div>
+</div>
+<script>
+const $=id=>document.getElementById(id);
+function parseValues(text){return text.split(/[\s,;\t]+/).map(v=>Number(v.trim())).filter(v=>Number.isFinite(v));}
+function fmt(v,d=4){return Number.isFinite(v)?v.toFixed(d):'—'}
+function mean(a){return a.reduce((s,v)=>s+v,0)/a.length}
+function stdev(a,m){if(a.length<2)return NaN;return Math.sqrt(a.reduce((s,v)=>s+(v-m)**2,0)/(a.length-1));}
+function classify(v){return v>=1.33?'ok':v>=1?'warn':'bad'}
+function setVal(id,v,d=4,cls=false){const el=$(id);el.textContent=fmt(v,d);el.className='val '+(cls?classify(v):'')}
+function calculate(){
+ const vals=parseValues($('data').value); const lsl=Number($('lsl').value), usl=Number($('usl').value);
+ $('countPill').textContent=vals.length+' values';
+ if(vals.length<2||!Number.isFinite(lsl)||!Number.isFinite(usl)||usl<=lsl){alert('Enter at least two values and valid LSL/USL limits.');return;}
+ const m=mean(vals), s=stdev(vals,m), cp=(usl-lsl)/(6*s), cpu=(usl-m)/(3*s), cpl=(m-lsl)/(3*s), cpk=Math.min(cpu,cpl);
+ setVal('mean',m,4); setVal('sd',s,5); setVal('cp',cp,3,true); setVal('cpk',cpk,3,true);
+ const out=[['Count',vals.length],['Minimum',fmt(Math.min(...vals),4)],['Maximum',fmt(Math.max(...vals),4)],['Range',fmt(Math.max(...vals)-Math.min(...vals),4)],['Lower Spec Limit',fmt(lsl,4)],['Upper Spec Limit',fmt(usl,4)],['Cpu',fmt(cpu,3)],['Cpl',fmt(cpl,3)],['Cp',fmt(cp,3)],['Cpk',fmt(cpk,3)],['Interpretation', cpk>=1.33?'Capable / typical production target met':cpk>=1?'Marginal / needs control improvement':'Not capable against limits']];
+ $('metrics').innerHTML=out.map(r=>`<tr><td>${r[0]}</td><td>${r[1]}</td></tr>`).join(''); draw(vals,lsl,usl,m,s);
+}
+function draw(vals,lsl,usl,m,s){
+ const c=$('chart'), ctx=c.getContext('2d'), W=c.width,H=c.height; ctx.clearRect(0,0,W,H);
+ const min=Math.min(...vals,lsl,m-4*s), max=Math.max(...vals,usl,m+4*s), pad=70, base=H-70, top=38, bins=24, bw=(max-min)/bins;
+ const hist=Array(bins).fill(0); vals.forEach(v=>{let i=Math.floor((v-min)/bw); if(i<0)i=0;if(i>=bins)i=bins-1;hist[i]++;}); const maxC=Math.max(...hist,1);
+ ctx.strokeStyle='#3a4149';ctx.lineWidth=2;ctx.beginPath();ctx.moveTo(pad,top);ctx.lineTo(pad,base);ctx.lineTo(W-pad,base);ctx.stroke();
+ for(let i=0;i<bins;i++){const x=pad+i*(W-2*pad)/bins+2, h=hist[i]/maxC*(base-top-20), y=base-h;ctx.fillStyle='#56616e';ctx.fillRect(x,y,(W-2*pad)/bins-4,h);}
+ function x(v){return pad+(v-min)/(max-min)*(W-2*pad)}
+ function vline(v,label,color){const xx=x(v);ctx.strokeStyle=color;ctx.lineWidth=4;ctx.beginPath();ctx.moveTo(xx,top);ctx.lineTo(xx,base+12);ctx.stroke();ctx.fillStyle=color;ctx.font='bold 28px -apple-system,Segoe UI';ctx.textAlign='center';ctx.fillText(label,xx,30)}
+ vline(lsl,'LSL','#ff5a5f'); vline(usl,'USL','#ff5a5f'); vline(m,'MEAN','#f2c230');
+ ctx.fillStyle='#aeb7c2';ctx.font='24px -apple-system,Segoe UI';ctx.textAlign='center';ctx.fillText('Distribution histogram with specification limits',W/2,H-22);
+}
+function loadSample(){fetch('sample-data.csv').then(r=>r.text()).then(t=>{$('data').value=t.replace(/value\n/i,'').trim();calculate();});}
+$('calc').addEventListener('click',calculate);$('clear').addEventListener('click',()=>{ $('data').value=''; ['mean','sd','cp','cpk'].forEach(id=>$(id).textContent='—'); $('metrics').innerHTML='<tr><td>Status</td><td>Cleared</td></tr>'; $('countPill').textContent='0 values'; const c=$('chart'); c.getContext('2d').clearRect(0,0,c.width,c.height);});$('sample').addEventListener('click',loadSample);
+$('file').addEventListener('change',e=>{const f=e.target.files[0];if(!f)return; const rd=new FileReader();rd.onload=()=>{$('data').value=String(rd.result).replace(/[^0-9+\-.eE,;\s\t]/g,' ');calculate();};rd.readAsText(f);});
+if('serviceWorker' in navigator){navigator.serviceWorker.register('./service-worker.js').then(()=>{$('installText').textContent='Offline PWA ready — use Share → Add to Home Screen';}).catch(()=>{});}loadSample();
+</script>
+</body></html>
