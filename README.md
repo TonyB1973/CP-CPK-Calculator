@@ -28,3 +28,7 @@ v5 updates:
 v6 fixes:
 - Decimal selector now re-renders current SPC, surface speed and trigonometry results immediately.
 - Displayed values now consistently use the selected decimal places.
+
+
+v7 fixes:
+- Decimal dropdown now refreshes Surface Speed and Trigonometry using stored calculation state.
