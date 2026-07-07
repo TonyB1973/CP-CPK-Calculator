@@ -1,278 +1,83 @@
 <!doctype html>
 <html lang="en">
 <head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<meta name="theme-color" content="#ffcc00">
-<link rel="manifest" href="manifest.webmanifest">
-<link rel="apple-touch-icon" href="icon-192.png">
-<title>Engineering Toolkit - SPC</title>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#ffcc00"><link rel="manifest" href="manifest.webmanifest"><link rel="apple-touch-icon" href="icon-192.png">
+<title>Engineering Toolkit</title>
 <style>
-:root{
-  --bg:#1f2227;--panel:#2b2f36;--panel2:#24282e;--line:#454b55;--text:#eef1f5;--muted:#a9b0bb;
-  --yellow:#ffcc00;--good:#36d399;--warn:#f8b84e;--bad:#ff5f5f;--blue:#69b7ff;
-  --shadow: 0 18px 50px rgba(0,0,0,.28);
-}
-*{box-sizing:border-box}
-html,body{margin:0;background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Arial,sans-serif}
-body{min-height:100vh}
-.app{max-width:1500px;margin:auto;padding:18px;padding-bottom:42px}
+:root{--bg:#1f2227;--panel:#2b2f36;--panel2:#24282e;--line:#454b55;--text:#eef1f5;--muted:#a9b0bb;--yellow:#ffcc00;--good:#36d399;--warn:#f8b84e;--bad:#ff5f5f;--blue:#69b7ff;--shadow:0 18px 50px rgba(0,0,0,.28)}
+*{box-sizing:border-box}html,body{margin:0;background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Arial,sans-serif}.app{max-width:1500px;margin:auto;padding:18px 18px 42px}
 .header{display:flex;gap:14px;align-items:center;justify-content:space-between;border:1px solid var(--line);background:linear-gradient(180deg,#30343b,#252930);border-radius:18px;padding:14px 16px;box-shadow:var(--shadow);position:sticky;top:8px;z-index:10}
-.brand{display:flex;gap:12px;align-items:center}
-.logo{width:44px;height:44px;border:2px solid var(--yellow);border-radius:12px;display:grid;place-items:center;font-weight:900;color:var(--yellow);background:#202226}
-h1{font-size:20px;margin:0;letter-spacing:.4px}.subtitle{font-size:12px;color:var(--muted);margin-top:3px}
-.tabs{display:flex;gap:8px;flex-wrap:wrap;justify-content:flex-end}
-.tab,.btn{border:1px solid var(--line);background:#20242a;color:var(--text);border-radius:12px;padding:10px 12px;font-weight:700;cursor:pointer}
-.tab.active,.btn.primary{border-color:var(--yellow);color:#161616;background:var(--yellow)}
-.btn.small{padding:7px 9px;font-size:12px}.btn.danger{border-color:#7a3333;color:#ffd7d7}
-.grid{display:grid;grid-template-columns:360px 1fr 360px;gap:16px;margin-top:16px}
-.panel{background:linear-gradient(180deg,var(--panel),var(--panel2));border:1px solid var(--line);border-radius:18px;padding:14px;box-shadow:var(--shadow)}
-.panel h2{font-size:15px;margin:0 0 12px 0;border-left:5px solid var(--yellow);padding-left:9px}
-label{display:block;color:var(--muted);font-size:12px;font-weight:700;margin:10px 0 5px}
-input,textarea,select{width:100%;border:1px solid var(--line);border-radius:12px;background:#15181d;color:var(--text);padding:11px;font-size:15px}
-textarea{min-height:160px;font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;resize:vertical}
-.row{display:grid;grid-template-columns:1fr 1fr;gap:10px}.row3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px}
-.buttons{display:flex;gap:8px;flex-wrap:wrap;margin-top:12px}
-.cards{display:grid;grid-template-columns:repeat(4,minmax(120px,1fr));gap:10px}
-.card{border:1px solid var(--line);background:#191d22;border-radius:16px;padding:12px;min-height:82px}
-.card .k{color:var(--muted);font-size:12px;font-weight:800;text-transform:uppercase;letter-spacing:.4px}.card .v{font-size:25px;font-weight:900;margin-top:8px}
-.card.good{border-color:rgba(54,211,153,.65)}.card.warn{border-color:rgba(248,184,78,.75)}.card.bad{border-color:rgba(255,95,95,.75)}
-.status{font-weight:900;border-radius:999px;padding:7px 10px;display:inline-block;margin-top:8px}
-.status.good{background:rgba(54,211,153,.14);color:var(--good)}.status.warn{background:rgba(248,184,78,.14);color:var(--warn)}.status.bad{background:rgba(255,95,95,.14);color:var(--bad)}
-canvas{width:100%;height:300px;background:#14171b;border:1px solid var(--line);border-radius:16px}
-.chartTitle{display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;color:var(--muted);font-size:12px;font-weight:800}
-.note{font-size:12px;color:var(--muted);line-height:1.45}.resultsList{font-size:13px;line-height:1.7;color:#d8dce2}
-.tableWrap{max-height:270px;overflow:auto;border:1px solid var(--line);border-radius:14px}
-table{width:100%;border-collapse:collapse;font-size:12px}td,th{border-bottom:1px solid #3a4049;padding:7px;text-align:right}th{position:sticky;top:0;background:#20242a;color:var(--yellow)}
-.honey{display:grid;grid-template-columns:repeat(auto-fit,minmax(145px,1fr));gap:12px}
-.hex{min-height:92px;border:1px solid var(--line);border-radius:18px;background:#191d22;padding:14px;display:flex;flex-direction:column;justify-content:center}
-.hex.active{border-color:var(--yellow)}.hex strong{color:var(--yellow)}.hidden{display:none!important}
-.footer{margin-top:16px;color:var(--muted);font-size:12px;text-align:center}
-@media(max-width:1150px){.grid{grid-template-columns:1fr}.header{position:relative;top:0}.cards{grid-template-columns:repeat(2,1fr)}}
-@media(max-width:560px){.app{padding:10px}.header{align-items:flex-start;flex-direction:column}.tabs{justify-content:flex-start}.cards{grid-template-columns:1fr}.row,.row3{grid-template-columns:1fr}canvas{height:250px}}
-@media print{.header,.left,.buttons,.footer{display:none}.grid{display:block}.panel{box-shadow:none;break-inside:avoid;margin-bottom:12px}body{background:white;color:black}.app{max-width:none}.panel,canvas{background:white;color:black}}
+.brand{display:flex;gap:12px;align-items:center}.logo{width:44px;height:44px;border:2px solid var(--yellow);border-radius:12px;display:grid;place-items:center;font-weight:900;color:var(--yellow);background:#202226}h1{font-size:20px;margin:0}.subtitle{font-size:12px;color:var(--muted);margin-top:3px}
+.tabs,.buttons{display:flex;gap:8px;flex-wrap:wrap}.tab,.btn{border:1px solid var(--line);background:#20242a;color:var(--text);border-radius:12px;padding:10px 12px;font-weight:700;cursor:pointer}.tab.active,.btn.primary{border-color:var(--yellow);color:#161616;background:var(--yellow)}.btn.danger{border-color:#7a3333;color:#ffd7d7}
+.grid{display:grid;grid-template-columns:360px 1fr 360px;gap:16px;margin-top:16px}.grid2{display:grid;grid-template-columns:430px 1fr;gap:16px;margin-top:16px}.panel{background:linear-gradient(180deg,var(--panel),var(--panel2));border:1px solid var(--line);border-radius:18px;padding:14px;box-shadow:var(--shadow)}.panel h2{font-size:15px;margin:0 0 12px;border-left:5px solid var(--yellow);padding-left:9px}
+label{display:block;color:var(--muted);font-size:12px;font-weight:700;margin:10px 0 5px}input,textarea,select{width:100%;border:1px solid var(--line);border-radius:12px;background:#15181d;color:var(--text);padding:11px;font-size:15px}textarea{min-height:160px;font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;resize:vertical}
+.row{display:grid;grid-template-columns:1fr 1fr;gap:10px}.row3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px}.cards{display:grid;grid-template-columns:repeat(4,minmax(120px,1fr));gap:10px}.card{border:1px solid var(--line);background:#191d22;border-radius:16px;padding:12px;min-height:82px}.card .k{color:var(--muted);font-size:12px;font-weight:800;text-transform:uppercase;letter-spacing:.4px}.card .v{font-size:25px;font-weight:900;margin-top:8px}.card.good{border-color:rgba(54,211,153,.65)}.card.warn{border-color:rgba(248,184,78,.75)}.card.bad{border-color:rgba(255,95,95,.75)}
+.status{font-weight:900;border-radius:999px;padding:7px 10px;display:inline-block;margin-top:8px}.status.good{background:rgba(54,211,153,.14);color:var(--good)}.status.warn{background:rgba(248,184,78,.14);color:var(--warn)}.status.bad{background:rgba(255,95,95,.14);color:var(--bad)}
+canvas{width:100%;height:300px;background:#14171b;border:1px solid var(--line);border-radius:16px}.chartTitle{display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;color:var(--muted);font-size:12px;font-weight:800}.note{font-size:12px;color:var(--muted);line-height:1.45}.resultsList{font-size:13px;line-height:1.7;color:#d8dce2}.tableWrap{max-height:270px;overflow:auto;border:1px solid var(--line);border-radius:14px}table{width:100%;border-collapse:collapse;font-size:12px}td,th{border-bottom:1px solid #3a4049;padding:7px;text-align:right}th{position:sticky;top:0;background:#20242a;color:var(--yellow)}.hidden{display:none!important}
+.honey{display:grid;grid-template-columns:repeat(auto-fit,minmax(145px,1fr));gap:12px}.hex{min-height:92px;border:1px solid var(--line);border-radius:18px;background:#191d22;padding:14px;display:flex;flex-direction:column;justify-content:center;cursor:pointer}.hex.active{border-color:var(--yellow)}.hex strong{color:var(--yellow)}.moduleSvg{width:100%;height:360px;background:#14171b;border:1px solid var(--line);border-radius:16px}.answer{font-size:36px;font-weight:900;color:var(--yellow);margin:6px 0}.footer{margin-top:16px;color:var(--muted);font-size:12px;text-align:center}
+@media(max-width:1150px){.grid,.grid2{grid-template-columns:1fr}.header{position:relative;top:0}.cards{grid-template-columns:repeat(2,1fr)}}@media(max-width:560px){.app{padding:10px}.header{align-items:flex-start;flex-direction:column}.cards,.row,.row3{grid-template-columns:1fr}canvas{height:250px}}
+@media print{.header,.left,.buttons,.footer{display:none}.grid,.grid2{display:block}.panel{box-shadow:none;break-inside:avoid;margin-bottom:12px}body{background:white;color:black}}
 </style>
 </head>
-<body>
-<div class="app">
-  <div class="header">
-    <div class="brand"><div class="logo">SPC</div><div><h1>Engineering Toolkit</h1><div class="subtitle">Cp / Cpk capability calculator · installable PWA · offline ready</div></div></div>
-    <div class="tabs">
-      <button class="tab active" data-page="spc">SPC</button>
-      <button class="tab" data-page="toolkit">Toolkit</button>
-      <button class="tab" data-page="report">Report</button>
-    </div>
-  </div>
+<body><div class="app">
+<div class="header"><div class="brand"><div class="logo">ET</div><div><h1>Engineering Toolkit</h1><div class="subtitle">SPC training · trigonometry · surface speed · installable PWA</div></div></div>
+<div class="tabs"><button class="tab active" data-page="spc">SPC</button><button class="tab" data-page="surface">Surface speed</button><button class="tab" data-page="trig">Trigonometry</button><button class="tab" data-page="toolkit">Toolkit</button><button class="tab" data-page="report">Report</button></div></div>
 
-  <section id="page-spc" class="page">
-    <div class="grid">
-      <div class="left">
-        <div class="panel">
-          <h2>01 · Specification</h2>
-          <div class="row">
-            <div><label>Lower spec limit</label><input id="lsl" type="number" step="0.0001" value="9.900"></div>
-            <div><label>Upper spec limit</label><input id="usl" type="number" step="0.0001" value="10.100"></div>
-          </div>
-          <div class="row">
-            <div><label>Subgroup size</label><input id="subgroup" type="number" min="2" step="1" value="5"></div>
-            <div><label>Target</label><input id="target" type="number" step="0.0001" value="10.000"></div>
-          </div>
-          <div class="buttons">
-            <button class="btn primary" id="analyse">Analyse</button>
-            <button class="btn" id="loadSample">Load sample</button>
-            <button class="btn danger" id="clear">Clear</button>
-          </div>
-        </div>
-
-        <div class="panel" style="margin-top:16px">
-          <h2>02 · Data input</h2>
-          <label>Paste from Excel / CSV / one value per line</label>
-          <textarea id="data"></textarea>
-          <div class="buttons">
-            <input id="file" type="file" accept=".csv,.txt" style="display:none">
-            <button class="btn" id="importBtn">Import CSV</button>
-            <button class="btn" id="exportBtn">Export CSV</button>
-            <button class="btn" id="saveLocal">Save analysis</button>
-            <button class="btn" id="loadLocal">Load saved</button>
-          </div>
-          <p class="note">Accepts comma, tab, space or newline separated values. Non-numeric headings are ignored.</p>
-        </div>
-      </div>
-
-      <div>
-        <div class="panel">
-          <h2>03 · Capability dashboard</h2>
-          <div class="cards" id="cards"></div>
-        </div>
-
-        <div class="panel" style="margin-top:16px">
-          <div class="chartTitle"><span>Histogram with normal curve, mean and specification limits</span><span id="histInfo"></span></div>
-          <canvas id="hist" width="1000" height="360"></canvas>
-        </div>
-
-        <div class="panel" style="margin-top:16px">
-          <div class="chartTitle"><span>Run chart</span><span>value over measurement number</span></div>
-          <canvas id="run" width="1000" height="340"></canvas>
-        </div>
-
-        <div class="panel" style="margin-top:16px">
-          <div class="chartTitle"><span>Moving range chart</span><span>absolute difference between adjacent points</span></div>
-          <canvas id="mr" width="1000" height="300"></canvas>
-        </div>
-      </div>
-
-      <div>
-        <div class="panel">
-          <h2>04 · Engineering summary</h2>
-          <div id="summary" class="resultsList"></div>
-        </div>
-        <div class="panel" style="margin-top:16px">
-          <h2>05 · Data table</h2>
-          <div class="tableWrap"><table id="tbl"></table></div>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <section id="page-toolkit" class="page hidden">
-    <div class="panel" style="margin-top:16px">
-      <h2>Engineering Toolkit Launcher</h2>
-      <div class="honey">
-        <div class="hex active"><strong>SPC</strong><span>Cp, Cpk, Pp, Ppk, charts</span></div>
-        <div class="hex"><strong>Trigonometry</strong><span>Coming next</span></div>
-        <div class="hex"><strong>Surface Speed</strong><span>Diameter, radius, RPM, m/sec</span></div>
-        <div class="hex"><strong>Bolt Circle</strong><span>PCD coordinate calculator</span></div>
-        <div class="hex"><strong>Unit Converter</strong><span>Metric / imperial</span></div>
-        <div class="hex"><strong>Six Point Align</strong><span>Future module</span></div>
-      </div>
-    </div>
-  </section>
-
-  <section id="page-report" class="page hidden">
-    <div class="panel" style="margin-top:16px">
-      <h2>Printable report</h2>
-      <div class="buttons"><button class="btn primary" onclick="window.print()">Print / Save PDF</button></div>
-      <div id="reportBody" class="resultsList" style="margin-top:14px"></div>
-    </div>
-  </section>
-
-  <div class="footer">Engineering Toolkit PWA · GitHub Pages compatible · Safari Home Screen ready</div>
+<section id="page-spc" class="page"><div class="grid">
+<div class="left">
+<div class="panel"><h2>01 · Specification</h2><div class="row"><div><label>Lower spec limit</label><input id="lsl" type="number" step="0.0001" value="9.900"></div><div><label>Upper spec limit</label><input id="usl" type="number" step="0.0001" value="10.100"></div></div><div class="row"><div><label>Subgroup size</label><input id="subgroup" type="number" min="2" step="1" value="5"></div><div><label>Target</label><input id="target" type="number" step="0.0001" value="10.000"></div></div><div class="buttons"><button class="btn primary" id="analyse">Analyse</button><button class="btn danger" id="clear">Clear</button></div></div>
+<div class="panel" style="margin-top:16px"><h2>02 · Training samples</h2><label>Select sample dataset</label><select id="sampleSelect"></select><div class="buttons"><button class="btn primary" id="loadSelectedSample">Load selected</button></div><p class="note" id="sampleNote"></p></div>
+<div class="panel" style="margin-top:16px"><h2>03 · Data input</h2><label>Paste from Excel / CSV / one value per line</label><textarea id="data"></textarea><div class="buttons"><input id="file" type="file" accept=".csv,.txt" style="display:none"><button class="btn" id="importBtn">Import CSV</button><button class="btn" id="exportBtn">Export CSV</button><button class="btn" id="saveLocal">Save</button><button class="btn" id="loadLocal">Load</button></div><p class="note">CSV headings are ignored. Works with comma, tab, space or newline separated values.</p></div>
 </div>
+<div><div class="panel"><h2>04 · Capability dashboard</h2><div class="cards" id="cards"></div></div><div class="panel" style="margin-top:16px"><div class="chartTitle"><span>Histogram with normal curve, mean and spec limits</span><span id="histInfo"></span></div><canvas id="hist" width="1000" height="360"></canvas></div><div class="panel" style="margin-top:16px"><div class="chartTitle"><span>Run chart</span><span>value over measurement number</span></div><canvas id="run" width="1000" height="340"></canvas></div><div class="panel" style="margin-top:16px"><div class="chartTitle"><span>Moving range chart</span><span>adjacent movement</span></div><canvas id="mr" width="1000" height="300"></canvas></div></div>
+<div><div class="panel"><h2>05 · Engineering summary</h2><div id="summary" class="resultsList"></div></div><div class="panel" style="margin-top:16px"><h2>06 · Training notes</h2><div class="resultsList"><b>Typical interpretation</b><br>Cpk ≥ 1.33: generally capable<br>Cpk 1.00–1.33: marginal / monitor<br>Cpk &lt; 1.00: not capable<br><br><b>Training idea</b><br>Load each sample and compare the histogram, run chart and Cpk. The drift sample may look acceptable by histogram alone but the run chart exposes movement over time.</div></div><div class="panel" style="margin-top:16px"><h2>07 · Data table</h2><div class="tableWrap"><table id="tbl"></table></div></div></div>
+</div></section>
+
+<section id="page-surface" class="page hidden"><div class="grid2">
+<div class="panel"><h2>Surface speed calculator</h2><div class="row"><div><label>Diameter Ø mm</label><input id="ssDia" type="number" step="0.001" value="10"></div><div><label>Radius mm</label><input id="ssRad" type="number" step="0.001"></div></div><div class="row"><div><label>RPM</label><input id="ssRpm" type="number" step="1" value="12000"></div><div><label>Surface speed m/sec</label><input id="ssMs" type="number" step="0.001"></div></div><div class="buttons"><button class="btn primary" id="ssCalc">Calculate missing</button><button class="btn" id="ssClear">Clear</button></div><p class="note">Formula: surface speed m/sec = π × diameter(mm) × RPM ÷ 60000. Enter any two main values to calculate the missing one.</p></div>
+<div><div class="panel"><h2>Result</h2><div id="ssAnswer" class="answer">—</div><div id="ssSummary" class="resultsList"></div></div><div class="panel" style="margin-top:16px"><h2>Visual</h2><svg class="moduleSvg" id="ssSvg" viewBox="0 0 800 360"></svg></div></div></div></section>
+
+<section id="page-trig" class="page hidden"><div class="grid2">
+<div class="panel"><h2>Right-angle trigonometry calculator</h2><div class="row3"><div><label>Angle A °</label><input id="angA" type="number" step="0.0001"></div><div><label>Angle B °</label><input id="angB" type="number" value="90" readonly></div><div><label>Angle C °</label><input id="angC" type="number" step="0.0001"></div></div><div class="row3"><div><label>Side a</label><input id="sideA" type="number" step="0.0001"></div><div><label>Side b / hypotenuse</label><input id="sideB" type="number" step="0.0001"></div><div><label>Side c</label><input id="sideC" type="number" step="0.0001"></div></div><div class="buttons"><button class="btn primary" id="trigCalc">Calculate</button><button class="btn" id="trigClear">Clear</button><button class="btn" id="trigSample">Example 3-4-5</button></div><p class="note">B is fixed at 90°. Enter enough information: one side + one acute angle, or two sides.</p></div>
+<div><div class="panel"><h2>Result</h2><div id="trigAnswer" class="resultsList"></div></div><div class="panel" style="margin-top:16px"><h2>Triangle visual</h2><svg class="moduleSvg" id="trigSvg" viewBox="0 0 800 360"></svg></div></div></div></section>
+
+<section id="page-toolkit" class="page hidden"><div class="panel" style="margin-top:16px"><h2>Engineering Toolkit Launcher</h2><div class="honey"><div class="hex active" data-go="spc"><strong>SPC</strong><span>Cp, Cpk, training data</span></div><div class="hex active" data-go="trig"><strong>Trigonometry</strong><span>Right triangle solver</span></div><div class="hex active" data-go="surface"><strong>Surface Speed</strong><span>m/sec, diameter, RPM</span></div><div class="hex"><strong>Bolt Circle</strong><span>Coming next</span></div><div class="hex"><strong>Unit Converter</strong><span>Coming next</span></div><div class="hex"><strong>Six Point Align</strong><span>Future module</span></div></div></div></section>
+<section id="page-report" class="page hidden"><div class="panel" style="margin-top:16px"><h2>Printable SPC report</h2><div class="buttons"><button class="btn primary" onclick="window.print()">Print / Save PDF</button></div><div id="reportBody" class="resultsList" style="margin-top:14px"></div></div></section>
+<div class="footer">Engineering Toolkit PWA · GitHub Pages compatible · Safari Home Screen ready</div></div>
 
 <script>
+const SAMPLE_META = [{"file": "sample-01.csv", "name": "Training 01 - Capable centred process", "lsl": 9.9, "usl": 10.1}, {"file": "sample-02.csv", "name": "Training 02 - Capable but off-centre high", "lsl": 9.9, "usl": 10.1}, {"file": "sample-03.csv", "name": "Training 03 - Marginal process", "lsl": 9.9, "usl": 10.1}, {"file": "sample-04.csv", "name": "Training 04 - Not capable / high variation", "lsl": 9.9, "usl": 10.1}, {"file": "sample-05.csv", "name": "Training 05 - Drift over time", "lsl": 9.9, "usl": 10.1}, {"file": "sample-06.csv", "name": "Training 06 - Outliers included", "lsl": 9.9, "usl": 10.1}];
 const $ = id => document.getElementById(id);
-const sampleInline = `Measurement
-9.99321
-10.01844
-9.98250
-10.03118
-9.97420`;
+function fmt(x,d=4){return Number.isFinite(x)?Number(x).toFixed(d):"—"}
+function parseValues(text){return text.split(/[\s,;\t]+/).map(x=>Number(x.trim())).filter(x=>Number.isFinite(x));}
+function mean(a){return a.reduce((s,x)=>s+x,0)/a.length} function sd(a,sample=true){const m=mean(a),v=a.reduce((s,x)=>s+(x-m)*(x-m),0)/(a.length-(sample?1:0));return Math.sqrt(Math.max(0,v))}
+function erf(x){const s=x<0?-1:1; x=Math.abs(x); const a1=.254829592,a2=-.284496736,a3=1.421413741,a4=-1.453152027,a5=1.061405429,p=.3275911; const t=1/(1+p*x); return s*(1-(((((a5*t+a4)*t)+a3)*t+a2)*t+a1)*t*Math.exp(-x*x));}
+function normCdf(z){return .5*(1+erf(z/Math.SQRT2))} function clsCpk(x){return x>=1.33?"good":x>=1.0?"warn":"bad"}
+function calc(){const values=parseValues($("data").value),lsl=Number($("lsl").value),usl=Number($("usl").value),target=Number($("target").value); if(values.length<2||!Number.isFinite(lsl)||!Number.isFinite(usl)||usl<=lsl){renderEmpty();return} const n=values.length,xbar=mean(values),s=sd(values,true),spop=sd(values,false),min=Math.min(...values),max=Math.max(...values),range=max-min; const cp=(usl-lsl)/(6*s),cpu=(usl-xbar)/(3*s),cpl=(xbar-lsl)/(3*s),cpk=Math.min(cpu,cpl),pp=(usl-lsl)/(6*spop),ppu=(usl-xbar)/(3*spop),ppl=(xbar-lsl)/(3*spop),ppk=Math.min(ppu,ppl); const pBelow=normCdf((lsl-xbar)/s),pAbove=1-normCdf((usl-xbar)/s),ppm=(pBelow+pAbove)*1e6,yieldPct=(1-pBelow-pAbove)*100,zbench=Math.min((xbar-lsl)/s,(usl-xbar)/s); render({values,lsl,usl,target,n,xbar,s,spop,min,max,range,cp,cpu,cpl,cpk,pp,ppk,ppm,yieldPct,zbench})}
+function renderEmpty(){$("cards").innerHTML='<div class="card bad"><div class="k">Status</div><div class="v">Need data</div></div>'; $("summary").innerHTML='Enter at least two measurements and valid LSL/USL.'}
+function render(r){const cards=[["Cp",r.cp,clsCpk(r.cp)],["Cpk",r.cpk,clsCpk(r.cpk)],["Pp",r.pp,clsCpk(r.pp)],["Ppk",r.ppk,clsCpk(r.ppk)],["Mean",r.xbar,""],["Std dev",r.s,""],["PPM",r.ppm,""],["Yield %",r.yieldPct,""]]; $("cards").innerHTML=cards.map(c=>`<div class="card ${c[2]}"><div class="k">${c[0]}</div><div class="v">${c[0]=="PPM"?fmt(c[1],0):c[0]=="Yield %"?fmt(c[1],3):fmt(c[1],4)}</div></div>`).join(""); const verdict=r.cpk>=1.33?["good","Capable"]:(r.cpk>=1.0?["warn","Marginal"]:["bad","Not capable"]); $("summary").innerHTML=`<span class="status ${verdict[0]}">${verdict[1]}</span><br><br>Count: <b>${r.n}</b><br>Mean: <b>${fmt(r.xbar,5)}</b><br>Sample σ: <b>${fmt(r.s,5)}</b><br>Population σ: <b>${fmt(r.spop,5)}</b><br>Min / Max: <b>${fmt(r.min,5)} / ${fmt(r.max,5)}</b><br>Range: <b>${fmt(r.range,5)}</b><br>CPU / CPL: <b>${fmt(r.cpu,4)} / ${fmt(r.cpl,4)}</b><br>Estimated PPM outside spec: <b>${fmt(r.ppm,0)}</b><br>Z bench: <b>${fmt(r.zbench,3)}</b><br><br><span class="note">Cp/Cpk use sample standard deviation. Pp/Ppk use population standard deviation.</span>`; $("reportBody").innerHTML=$("summary").innerHTML+`<br><br><b>Specification:</b> LSL ${r.lsl}, Target ${r.target}, USL ${r.usl}`; renderTable(r.values); drawHist($("hist"),r); drawRun($("run"),r); drawMR($("mr"),r)}
+function renderTable(values){let rows='<tr><th>#</th><th>Measurement</th></tr>'; values.forEach((v,i)=>rows+=`<tr><td>${i+1}</td><td>${fmt(v,5)}</td></tr>`); $("tbl").innerHTML=rows}
+function setupCanvas(c){const ctx=c.getContext("2d"),w=c.width,h=c.height; ctx.clearRect(0,0,w,h);ctx.fillStyle="#14171b";ctx.fillRect(0,0,w,h);ctx.strokeStyle="#454b55";ctx.lineWidth=1;ctx.strokeRect(40,20,w-70,h-55);return {ctx,w,h,l:50,t:25,r:w-30,b:h-45}}
+function line(ctx,x1,y1,x2,y2,col,w=2){ctx.strokeStyle=col;ctx.lineWidth=w;ctx.beginPath();ctx.moveTo(x1,y1);ctx.lineTo(x2,y2);ctx.stroke()} function txt(ctx,s,x,y,col="#a9b0bb",align="left"){ctx.fillStyle=col;ctx.font="14px -apple-system,Segoe UI,Arial";ctx.textAlign=align;ctx.fillText(s,x,y)}
+function drawHist(c,r){const {ctx,w,h,l,t,b}=setupCanvas(c),plotW=w-80,plotH=h-75,min=Math.min(r.min,r.lsl),max=Math.max(r.max,r.usl),bins=Math.min(24,Math.max(8,Math.round(Math.sqrt(r.n)))),bw=(max-min)/bins,counts=Array(bins).fill(0); r.values.forEach(v=>{let k=Math.floor((v-min)/bw);if(k<0)k=0;if(k>=bins)k=bins-1;counts[k]++}); const maxC=Math.max(...counts); counts.forEach((ct,i)=>{const x=l+i*plotW/bins+2,bh=ct/maxC*plotH;ctx.fillStyle="#ffcc00";ctx.fillRect(x,b-bh,plotW/bins-4,bh)}); function X(v){return l+(v-min)/(max-min)*plotW} function Ydens(y){return b-y*plotH} [r.lsl,r.usl,r.xbar].forEach((v,i)=>{const col=i<2?"#ff5f5f":"#69b7ff";line(ctx,X(v),t,X(v),b,col,3);txt(ctx,i==0?"LSL":i==1?"USL":"MEAN",X(v)+4,t+18,col)}); ctx.beginPath();let first=true;const scale=maxC*bw*Math.sqrt(2*Math.PI)*r.s;for(let i=0;i<220;i++){const xval=min+(max-min)*i/219,dens=Math.exp(-.5*((xval-r.xbar)/r.s)**2)*scale/(r.s*Math.sqrt(2*Math.PI)),x=X(xval),y=Ydens(dens/maxC); if(first){ctx.moveTo(x,y);first=false}else ctx.lineTo(x,y)} ctx.strokeStyle="#eef1f5";ctx.lineWidth=3;ctx.stroke();txt(ctx,`n=${r.n} bins=${bins}`,w-40,h-18,"#a9b0bb","right")}
+function drawRun(c,r){const {ctx,w,h,l,t,b}=setupCanvas(c),plotW=w-80,plotH=h-75,ymin=Math.min(r.min,r.lsl),ymax=Math.max(r.max,r.usl); function X(i){return l+i/(r.values.length-1)*plotW} function Y(v){return b-(v-ymin)/(ymax-ymin)*plotH} [r.lsl,r.usl,r.xbar].forEach((v,i)=>line(ctx,l,Y(v),w-30,Y(v),i<2?"#ff5f5f":"#69b7ff",2));ctx.beginPath();r.values.forEach((v,i)=>{const x=X(i),y=Y(v);if(i==0)ctx.moveTo(x,y);else ctx.lineTo(x,y)});ctx.strokeStyle="#ffcc00";ctx.lineWidth=2;ctx.stroke()}
+function drawMR(c,r){const mr=[];for(let i=1;i<r.values.length;i++)mr.push(Math.abs(r.values[i]-r.values[i-1]));const {ctx,w,h,l,t,b}=setupCanvas(c),plotW=w-80,plotH=h-75,max=Math.max(...mr,0.001);function X(i){return l+i/(mr.length-1)*plotW} function Y(v){return b-v/max*plotH}ctx.beginPath();mr.forEach((v,i)=>{const x=X(i),y=Y(v);if(i==0)ctx.moveTo(x,y);else ctx.lineTo(x,y)});ctx.strokeStyle="#ffcc00";ctx.lineWidth=2;ctx.stroke();txt(ctx,`MR avg ${fmt(mean(mr),5)}`,w-40,h-18,"#a9b0bb","right")}
+async function loadSample(i){const m=SAMPLE_META[i]; $("lsl").value=m.lsl; $("usl").value=m.usl; $("target").value=((m.lsl+m.usl)/2).toFixed(3); $("sampleNote").innerHTML=`<b>${m.name}</b><br>Use this to demonstrate capability, centring, variation, drift or outlier behaviour.`; const r=await fetch(m.file); $("data").value=await r.text(); calc()}
+SAMPLE_META.forEach((m,i)=>$("sampleSelect").innerHTML+=`<option value="${i}">${m.name}</option>`); $("loadSelectedSample").onclick=()=>loadSample(Number($("sampleSelect").value)); $("sampleSelect").onchange=()=>$("sampleNote").textContent=SAMPLE_META[Number($("sampleSelect").value)].name;
+$("analyse").onclick=calc;$("clear").onclick=()=>{$("data").value="";calc()};$("importBtn").onclick=()=>$("file").click();$("file").onchange=e=>{const f=e.target.files[0];if(!f)return;const reader=new FileReader();reader.onload=()=>{$("data").value=reader.result;calc()};reader.readAsText(f)};$("exportBtn").onclick=()=>{const blob=new Blob([$("data").value],{type:"text/csv"}),a=document.createElement("a");a.href=URL.createObjectURL(blob);a.download="spc-data.csv";a.click();URL.revokeObjectURL(a.href)};$("saveLocal").onclick=()=>{localStorage.setItem("spcAnalysis",JSON.stringify({data:$("data").value,lsl:$("lsl").value,usl:$("usl").value,target:$("target").value,subgroup:$("subgroup").value}));alert("Saved on this device.")};$("loadLocal").onclick=()=>{const s=localStorage.getItem("spcAnalysis");if(!s)return alert("No saved analysis found.");const o=JSON.parse(s);["data","lsl","usl","target","subgroup"].forEach(k=>$(k).value=o[k]??$(k).value);calc()}
 
-function parseValues(text){
-  return text.split(/[\s,;\t]+/).map(x=>Number(x.trim())).filter(x=>Number.isFinite(x));
-}
-function mean(a){return a.reduce((s,x)=>s+x,0)/a.length}
-function sd(a, sample=true){const m=mean(a); const v=a.reduce((s,x)=>s+(x-m)*(x-m),0)/(a.length-(sample?1:0)); return Math.sqrt(Math.max(0,v))}
-function erf(x){const s=x<0?-1:1; x=Math.abs(x); const a1=.254829592,a2=-.284496736,a3=1.421413741,a4=-1.453152027,a5=1.061405429,p=.3275911; const t=1/(1+p*x); const y=1-(((((a5*t+a4)*t)+a3)*t+a2)*t+a1)*t*Math.exp(-x*x); return s*y}
-function normCdf(z){return .5*(1+erf(z/Math.SQRT2))}
-function fmt(x,d=4){return Number.isFinite(x)?x.toFixed(d):"—"}
-function clsCpk(x){return x>=1.33?"good":x>=1.0?"warn":"bad"}
+function ssCalc(){let d=Number($("ssDia").value),r=Number($("ssRad").value),rpm=Number($("ssRpm").value),ms=Number($("ssMs").value); if(!d&&r)d=2*r; if(d&&!r)r=d/2; if(d&&rpm&&!ms)ms=Math.PI*d*rpm/60000; else if(d&&ms&&!rpm)rpm=ms*60000/(Math.PI*d); else if(rpm&&ms&&!d){d=ms*60000/(Math.PI*rpm);r=d/2} $("ssDia").value=d?fmt(d,3):"";$("ssRad").value=r?fmt(r,3):"";$("ssRpm").value=rpm?fmt(rpm,0):"";$("ssMs").value=ms?fmt(ms,4):"";$("ssAnswer").textContent=ms?fmt(ms,4)+" m/sec":"—";$("ssSummary").innerHTML=`Diameter: <b>${fmt(d,3)} mm</b><br>Radius: <b>${fmt(r,3)} mm</b><br>RPM: <b>${fmt(rpm,0)}</b><br>Surface speed: <b>${fmt(ms,4)} m/sec</b>`;drawSS(d,rpm,ms)}
+function drawSS(d,rpm,ms){const svg=$("ssSvg");svg.innerHTML=`<circle cx="400" cy="170" r="95" fill="#20242a" stroke="#ffcc00" stroke-width="5"/><line x1="400" y1="170" x2="495" y2="170" stroke="#69b7ff" stroke-width="4"/><text x="410" y="155" fill="#69b7ff">R ${fmt(d/2,2)} mm</text><path d="M 330 70 A 120 120 0 0 1 505 95" fill="none" stroke="#eef1f5" stroke-width="4"/><polygon points="505,95 485,94 497,112" fill="#eef1f5"/><text x="30" y="315" fill="#a9b0bb">V = π × D × RPM ÷ 60000 = ${fmt(ms,4)} m/sec</text><text x="335" y="178" fill="#eef1f5" font-size="24">${fmt(rpm,0)} rpm</text>`}
+$("ssCalc").onclick=ssCalc;$("ssClear").onclick=()=>{["ssDia","ssRad","ssRpm","ssMs"].forEach(id=>$(id).value="");ssCalc()};["ssDia","ssRad","ssRpm","ssMs"].forEach(id=>$(id).addEventListener("input",()=>{clearTimeout(window.__ss);window.__ss=setTimeout(ssCalc,150)}));
 
-function calc(){
-  const values=parseValues($("data").value);
-  const lsl=Number($("lsl").value), usl=Number($("usl").value), target=Number($("target").value);
-  if(values.length<2 || !Number.isFinite(lsl) || !Number.isFinite(usl) || usl<=lsl){ renderEmpty(); return; }
-  const n=values.length, xbar=mean(values), s=sd(values,true), spop=sd(values,false), min=Math.min(...values), max=Math.max(...values), range=max-min;
-  const cp=(usl-lsl)/(6*s), cpu=(usl-xbar)/(3*s), cpl=(xbar-lsl)/(3*s), cpk=Math.min(cpu,cpl);
-  const pp=(usl-lsl)/(6*spop), ppu=(usl-xbar)/(3*spop), ppl=(xbar-lsl)/(3*spop), ppk=Math.min(ppu,ppl);
-  const zLower=(lsl-xbar)/s, zUpper=(usl-xbar)/s;
-  const pBelow=normCdf(zLower), pAbove=1-normCdf(zUpper), ppm=(pBelow+pAbove)*1e6, yieldPct=(1-pBelow-pAbove)*100;
-  const zbench=Math.min((xbar-lsl)/s,(usl-xbar)/s);
-  const res={values,lsl,usl,target,n,xbar,s,spop,min,max,range,cp,cpu,cpl,cpk,pp,ppk,ppm,yieldPct,zbench};
-  render(res); 
-}
+function deg(x){return x*180/Math.PI}function rad(x){return x*Math.PI/180}
+function trigCalc(){let A=Number($("angA").value),C=Number($("angC").value),a=Number($("sideA").value),b=Number($("sideB").value),c=Number($("sideC").value); if(A&&!C)C=90-A;if(C&&!A)A=90-C;if(a&&c&&!b)b=Math.hypot(a,c); if(a&&b&&!c)c=Math.sqrt(Math.max(0,b*b-a*a)); if(c&&b&&!a)a=Math.sqrt(Math.max(0,b*b-c*c)); if(a&&c){A=deg(Math.atan2(a,c));C=90-A;b=Math.hypot(a,c)} else if(A&&b){a=b*Math.sin(rad(A));c=b*Math.cos(rad(A));C=90-A} else if(C&&b){c=b*Math.sin(rad(C));a=b*Math.cos(rad(C));A=90-C} else if(A&&a){b=a/Math.sin(rad(A));c=b*Math.cos(rad(A));C=90-A} else if(A&&c){b=c/Math.cos(rad(A));a=b*Math.sin(rad(A));C=90-A} else if(C&&c){b=c/Math.sin(rad(C));a=b*Math.cos(rad(C));A=90-C} else if(C&&a){b=a/Math.cos(rad(C));c=b*Math.sin(rad(C));A=90-C} $("angA").value=A?fmt(A,4):"";$("angC").value=C?fmt(C,4):"";$("sideA").value=a?fmt(a,4):"";$("sideB").value=b?fmt(b,4):"";$("sideC").value=c?fmt(c,4):"";$("trigAnswer").innerHTML=`Angle A: <b>${fmt(A,4)}°</b><br>Angle B: <b>90°</b><br>Angle C: <b>${fmt(C,4)}°</b><br>Side a: <b>${fmt(a,4)}</b><br>Side b / hypotenuse: <b>${fmt(b,4)}</b><br>Side c: <b>${fmt(c,4)}</b>`; drawTrig(a,b,c,A,C)}
+function drawTrig(a,b,c,A,C){const svg=$("trigSvg"); const scale=260/Math.max(a||1,c||1); const x0=170,y0=285,x1=x0+(c||1)*scale,y1=y0,x2=x0,y2=y0-(a||1)*scale; svg.innerHTML=`<polygon points="${x0},${y0} ${x1},${y1} ${x2},${y2}" fill="#20242a" stroke="#ffcc00" stroke-width="5"/><path d="M ${x0+28} ${y0} L ${x0+28} ${y0-28} L ${x0} ${y0-28}" fill="none" stroke="#eef1f5" stroke-width="3"/><text x="${(x0+x2)/2-55}" y="${(y0+y2)/2}" fill="#69b7ff">a = ${fmt(a,3)}</text><text x="${(x0+x1)/2}" y="${y0+30}" fill="#69b7ff">c = ${fmt(c,3)}</text><text x="${(x1+x2)/2+20}" y="${(y1+y2)/2}" fill="#69b7ff">b = ${fmt(b,3)}</text><text x="${x1-30}" y="${y1-15}" fill="#eef1f5">A ${fmt(A,2)}°</text><text x="${x2+12}" y="${y2+28}" fill="#eef1f5">C ${fmt(C,2)}°</text><text x="${x0+8}" y="${y0-8}" fill="#eef1f5">B 90°</text>`}
+$("trigCalc").onclick=trigCalc;$("trigClear").onclick=()=>{["angA","angC","sideA","sideB","sideC"].forEach(id=>$(id).value="");$("angB").value=90;trigCalc()};$("trigSample").onclick=()=>{$("sideA").value=3;$("sideC").value=4;$("sideB").value="";$("angA").value="";$("angC").value="";trigCalc()};["angA","angC","sideA","sideB","sideC"].forEach(id=>$(id).addEventListener("input",()=>{clearTimeout(window.__trig);window.__trig=setTimeout(trigCalc,150)}));
 
-function renderEmpty(){
-  $("cards").innerHTML='<div class="card bad"><div class="k">Status</div><div class="v">Need data</div></div>';
-  $("summary").innerHTML='Enter at least two measurements and valid LSL/USL.';
-}
-
-function render(r){
-  const cards=[
-    ["Cp",r.cp,clsCpk(r.cp)],["Cpk",r.cpk,clsCpk(r.cpk)],["Pp",r.pp,clsCpk(r.pp)],["Ppk",r.ppk,clsCpk(r.ppk)],
-    ["Mean",r.xbar,""],["Std dev",r.s,""],["PPM",r.ppm,""],["Yield %",r.yieldPct,""]
-  ];
-  $("cards").innerHTML=cards.map(c=>`<div class="card ${c[2]}"><div class="k">${c[0]}</div><div class="v">${c[0]=="PPM"?fmt(c[1],0):c[0]=="Yield %"?fmt(c[1],3):fmt(c[1],4)}</div></div>`).join("");
-  const verdict=r.cpk>=1.33?["good","Capable"]:(r.cpk>=1.0?["warn","Marginal"]:["bad","Not capable"]);
-  $("summary").innerHTML=`
-    <span class="status ${verdict[0]}">${verdict[1]}</span><br><br>
-    Count: <b>${r.n}</b><br>
-    Mean: <b>${fmt(r.xbar,5)}</b><br>
-    Sample σ: <b>${fmt(r.s,5)}</b><br>
-    Population σ: <b>${fmt(r.spop,5)}</b><br>
-    Min / Max: <b>${fmt(r.min,5)} / ${fmt(r.max,5)}</b><br>
-    Range: <b>${fmt(r.range,5)}</b><br>
-    CPU / CPL: <b>${fmt(r.cpu,4)} / ${fmt(r.cpl,4)}</b><br>
-    Estimated PPM outside spec: <b>${fmt(r.ppm,0)}</b><br>
-    Z bench: <b>${fmt(r.zbench,3)}</b><br><br>
-    <span class="note">Cp/Cpk use sample standard deviation. Pp/Ppk use population standard deviation across all values.</span>`;
-  $("reportBody").innerHTML=$("summary").innerHTML + `<br><br><b>Specification:</b> LSL ${r.lsl}, Target ${r.target}, USL ${r.usl}`;
-  renderTable(r.values);
-  drawHist($("hist"),r); drawRun($("run"),r); drawMR($("mr"),r);
-}
-function renderTable(values){
-  let rows='<tr><th>#</th><th>Measurement</th></tr>';
-  values.forEach((v,i)=>rows+=`<tr><td>${i+1}</td><td>${fmt(v,5)}</td></tr>`);
-  $("tbl").innerHTML=rows;
-}
-function setupCanvas(c){
-  const ctx=c.getContext("2d"), w=c.width,h=c.height;
-  ctx.clearRect(0,0,w,h); ctx.fillStyle="#14171b"; ctx.fillRect(0,0,w,h);
-  ctx.strokeStyle="#454b55"; ctx.lineWidth=1; ctx.strokeRect(40,20,w-70,h-55);
-  return {ctx,w,h,l:50,t:25,r:w-30,b:h-45};
-}
-function line(ctx,x1,y1,x2,y2,col,w=2){ctx.strokeStyle=col;ctx.lineWidth=w;ctx.beginPath();ctx.moveTo(x1,y1);ctx.lineTo(x2,y2);ctx.stroke()}
-function txt(ctx,s,x,y,col="#a9b0bb",align="left"){ctx.fillStyle=col;ctx.font="14px -apple-system,Segoe UI,Arial";ctx.textAlign=align;ctx.fillText(s,x,y)}
-function drawHist(c,r){
-  const {ctx,w,h,l,t,b}=setupCanvas(c), plotW=w-80, plotH=h-75;
-  const min=Math.min(r.min,r.lsl), max=Math.max(r.max,r.usl), bins=Math.min(24,Math.max(8,Math.round(Math.sqrt(r.n))));
-  const bw=(max-min)/bins, counts=Array(bins).fill(0);
-  r.values.forEach(v=>{let k=Math.floor((v-min)/bw); if(k<0)k=0;if(k>=bins)k=bins-1;counts[k]++});
-  const maxC=Math.max(...counts);
-  counts.forEach((ct,i)=>{const x=l+i*plotW/bins+2, bh=ct/maxC*plotH; ctx.fillStyle="#ffcc00"; ctx.fillRect(x,b-bh,plotW/bins-4,bh);});
-  function X(v){return l+(v-min)/(max-min)*plotW} function Ydens(y){return b-y*plotH}
-  [r.lsl,r.usl,r.xbar].forEach((v,i)=>{const col=i<2?"#ff5f5f":"#69b7ff"; line(ctx,X(v),t,X(v),b,col,3); txt(ctx,i==0?"LSL":i==1?"USL":"MEAN",X(v)+4,t+18,col)});
-  ctx.beginPath(); let first=true; const scale=maxC*bw*Math.sqrt(2*Math.PI)*r.s;
-  for(let i=0;i<220;i++){const xval=min+(max-min)*i/219; const dens=Math.exp(-.5*((xval-r.xbar)/r.s)**2)*scale/(r.s*Math.sqrt(2*Math.PI)); const x=X(xval), y=Ydens(dens/maxC); if(first){ctx.moveTo(x,y);first=false}else ctx.lineTo(x,y)}
-  ctx.strokeStyle="#eef1f5";ctx.lineWidth=3;ctx.stroke();
-  txt(ctx,`n=${r.n}  bins=${bins}`,w-40,h-18,"#a9b0bb","right");
-}
-function drawRun(c,r){
-  const {ctx,w,h,l,t,b}=setupCanvas(c), plotW=w-80, plotH=h-75;
-  const ymin=Math.min(r.min,r.lsl), ymax=Math.max(r.max,r.usl); function X(i){return l+i/(r.values.length-1)*plotW} function Y(v){return b-(v-ymin)/(ymax-ymin)*plotH}
-  [r.lsl,r.usl,r.xbar].forEach((v,i)=>line(ctx,l,Y(v),w-30,Y(v),i<2?"#ff5f5f":"#69b7ff",2));
-  ctx.beginPath(); r.values.forEach((v,i)=>{const x=X(i),y=Y(v); if(i==0)ctx.moveTo(x,y); else ctx.lineTo(x,y)}); ctx.strokeStyle="#ffcc00";ctx.lineWidth=2;ctx.stroke();
-}
-function drawMR(c,r){
-  const mr=[]; for(let i=1;i<r.values.length;i++)mr.push(Math.abs(r.values[i]-r.values[i-1]));
-  const {ctx,w,h,l,t,b}=setupCanvas(c), plotW=w-80, plotH=h-75; const max=Math.max(...mr,0.001);
-  function X(i){return l+i/(mr.length-1)*plotW} function Y(v){return b-v/max*plotH}
-  ctx.beginPath(); mr.forEach((v,i)=>{const x=X(i),y=Y(v); if(i==0)ctx.moveTo(x,y); else ctx.lineTo(x,y)}); ctx.strokeStyle="#ffcc00";ctx.lineWidth=2;ctx.stroke();
-  txt(ctx,`MR avg ${fmt(mean(mr),5)}`,w-40,h-18,"#a9b0bb","right");
-}
-
-$("analyse").onclick=calc;
-$("clear").onclick=()=>{$("data").value="";calc()};
-$("loadSample").onclick=async()=>{try{const r=await fetch("sample-data.csv");$("data").value=await r.text()}catch{$("data").value=sampleInline}calc()};
-$("importBtn").onclick=()=>$("file").click();
-$("file").onchange=e=>{const f=e.target.files[0]; if(!f)return; const reader=new FileReader(); reader.onload=()=>{$("data").value=reader.result;calc()}; reader.readAsText(f)};
-$("exportBtn").onclick=()=>{const blob=new Blob([$("data").value],{type:"text/csv"}); const a=document.createElement("a"); a.href=URL.createObjectURL(blob); a.download="spc-data.csv"; a.click(); URL.revokeObjectURL(a.href)};
-$("saveLocal").onclick=()=>{localStorage.setItem("spcAnalysis",JSON.stringify({data:$("data").value,lsl:$("lsl").value,usl:$("usl").value,target:$("target").value,subgroup:$("subgroup").value})); alert("Analysis saved on this device.")};
-$("loadLocal").onclick=()=>{const s=localStorage.getItem("spcAnalysis"); if(!s)return alert("No saved analysis found."); const o=JSON.parse(s); ["data","lsl","usl","target","subgroup"].forEach(k=>$(k).value=o[k]??$(k).value); calc()};
-document.querySelectorAll(".tab").forEach(b=>b.onclick=()=>{document.querySelectorAll(".tab").forEach(x=>x.classList.remove("active"));b.classList.add("active");document.querySelectorAll(".page").forEach(p=>p.classList.add("hidden"));$("page-"+b.dataset.page).classList.remove("hidden")});
+document.querySelectorAll(".tab").forEach(b=>b.onclick=()=>showPage(b.dataset.page));document.querySelectorAll(".hex[data-go]").forEach(h=>h.onclick=()=>showPage(h.dataset.go));function showPage(p){document.querySelectorAll(".tab").forEach(x=>x.classList.toggle("active",x.dataset.page==p));document.querySelectorAll(".page").forEach(x=>x.classList.add("hidden"));$("page-"+p).classList.remove("hidden")}
 ["lsl","usl","target","subgroup","data"].forEach(id=>$(id).addEventListener("input",()=>{clearTimeout(window.__t);window.__t=setTimeout(calc,200)}));
 if("serviceWorker" in navigator){window.addEventListener("load",()=>navigator.serviceWorker.register("./service-worker.js"))}
-$("loadSample").click();
-</script>
-</body>
-</html>
+loadSample(0); ssCalc(); trigCalc();
+</script></body></html>

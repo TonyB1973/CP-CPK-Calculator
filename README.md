@@ -1,14 +1,10 @@
-# Engineering Toolkit - SPC PWA
+# Engineering Toolkit PWA v2
 
-GitHub Pages ready Progressive Web App.
+Includes:
+- SPC Cp/Cpk calculator
+- Multiple training sample datasets
+- Surface speed calculator
+- Right-angle trigonometry calculator
+- Offline PWA support
 
-Upload these files to the root of your repository:
-
-- index.html
-- manifest.webmanifest
-- service-worker.js
-- sample-data.csv
-- icon-192.png
-- icon-512.png
-
-Then enable GitHub Pages from Settings > Pages > Deploy from branch > main > /(root).
+Upload all files to the root of your GitHub repository and keep GitHub Pages set to main / root.
