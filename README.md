@@ -32,3 +32,10 @@ v6 fixes:
 
 v7 fixes:
 - Decimal dropdown now refreshes Surface Speed and Trigonometry using stored calculation state.
+
+
+v9 layout:
+- App now uses more of the screen height.
+- Header reduced.
+- Charts and SVG visuals enlarged.
+- Surface speed and triangle pages fill the screen better.

@@ -18,6 +18,50 @@ canvas{width:100%;height:300px;background:#14171b;border:1px solid var(--line);b
 .honey{display:grid;grid-template-columns:repeat(auto-fit,minmax(145px,1fr));gap:12px}.hex{min-height:92px;border:1px solid var(--line);border-radius:18px;background:#191d22;padding:14px;display:flex;flex-direction:column;justify-content:center;cursor:pointer}.hex.active{border-color:var(--yellow)}.hex strong{color:var(--yellow)}.moduleSvg{width:100%;height:360px;background:#14171b;border:1px solid var(--line);border-radius:16px}.answer{font-size:36px;font-weight:900;color:var(--yellow);margin:6px 0}.footer{margin-top:16px;color:var(--muted);font-size:12px;text-align:center}
 @media(max-width:1150px){.grid,.grid2{grid-template-columns:1fr}.header{position:relative;top:0}.cards{grid-template-columns:repeat(2,1fr)}}@media(max-width:560px){.app{padding:10px}.header{align-items:flex-start;flex-direction:column}.cards,.row,.row3{grid-template-columns:1fr}canvas{height:250px}}
 @media print{.header,.left,.buttons,.footer{display:none}.grid,.grid2{display:block}.panel{box-shadow:none;break-inside:avoid;margin-bottom:12px}body{background:white;color:black}}
+
+html,body{height:100%;overflow-x:hidden}
+body{min-height:100dvh}
+.app{max-width:1800px;min-height:100dvh;margin:auto;padding:10px;display:flex;flex-direction:column}
+.header{padding:9px 12px;border-radius:15px;min-height:62px;flex:0 0 auto}
+.logo{width:38px;height:38px;border-radius:10px}
+h1{font-size:18px}.subtitle{font-size:11px}
+.tab,.btn{padding:8px 10px;border-radius:10px}
+.page{flex:1 1 auto;min-height:0}
+.grid{grid-template-columns:340px minmax(0,1fr) 340px;gap:12px;margin-top:12px;min-height:calc(100dvh - 92px)}
+.grid2{grid-template-columns:390px minmax(0,1fr);gap:12px;margin-top:12px;min-height:calc(100dvh - 92px)}
+.panel{border-radius:15px;padding:12px}
+.panel h2{font-size:14px;margin-bottom:9px}
+.left{display:flex;flex-direction:column;gap:12px;min-height:0}
+.left .panel{margin-top:0!important}
+.left textarea{min-height:220px;flex:1}
+.cards{grid-template-columns:repeat(4,minmax(100px,1fr));gap:8px}
+.card{min-height:72px;padding:10px}.card .v{font-size:22px}
+#hist{height:38dvh;min-height:330px}
+#run{height:25dvh;min-height:230px}
+#mr{height:22dvh;min-height:210px}
+.moduleSvg{height:calc(100dvh - 310px);min-height:480px}
+#page-surface .moduleSvg,#page-trig .moduleSvg{height:calc(100dvh - 245px);min-height:560px}
+#page-surface .answer{font-size:46px}
+#page-surface .grid2>div:nth-child(2),#page-trig .grid2>div:nth-child(2){display:grid;grid-template-rows:auto 1fr;gap:12px;min-height:0}
+#page-surface .grid2>div:nth-child(2) .panel,#page-trig .grid2>div:nth-child(2) .panel{margin-top:0!important}
+#page-toolkit .panel{min-height:calc(100dvh - 98px)}
+.honey{height:100%;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));align-content:stretch}
+.hex{min-height:150px;font-size:16px}
+.footer{display:none}
+@media(max-width:1150px){
+  .grid,.grid2{grid-template-columns:1fr;min-height:auto}
+  .moduleSvg,#page-surface .moduleSvg,#page-trig .moduleSvg{height:58dvh;min-height:420px}
+  .header{position:relative;top:0}
+}
+@media(max-width:560px){
+  .app{padding:8px}
+  .tabs{gap:6px}
+  .tab,.btn{padding:8px 9px;font-size:12px}
+  #hist{height:330px}
+  #run,#mr{height:250px}
+  .moduleSvg,#page-surface .moduleSvg,#page-trig .moduleSvg{height:56dvh;min-height:390px}
+}
+
 </style>
 </head>
 <body><div class="app">
@@ -58,7 +102,7 @@ canvas{width:100%;height:300px;background:#14171b;border:1px solid var(--line);b
 
 <section id="page-toolkit" class="page hidden"><div class="panel" style="margin-top:16px"><h2>Engineering Toolkit Launcher</h2><div class="honey"><div class="hex active" data-go="spc"><strong>SPC</strong><span>Cp, Cpk, training data</span></div><div class="hex active" data-go="trig"><strong>Trigonometry</strong><span>Right triangle solver</span></div><div class="hex active" data-go="surface"><strong>Surface Speed</strong><span>m/sec, diameter, RPM</span></div><div class="hex"><strong>Bolt Circle</strong><span>Coming next</span></div><div class="hex"><strong>Unit Converter</strong><span>Coming next</span></div><div class="hex"><strong>Six Point Align</strong><span>Future module</span></div></div></div></section>
 <section id="page-report" class="page hidden"><div class="panel" style="margin-top:16px"><h2>Printable SPC report</h2><div class="buttons"><button class="btn primary" onclick="window.print()">Print / Save PDF</button></div><div id="reportBody" class="resultsList" style="margin-top:14px"></div></div></section>
-<div class="footer">Engineering Toolkit PWA · GitHub Pages compatible · Safari Home Screen ready · v8</div></div>
+<div class="footer">Engineering Toolkit PWA · GitHub Pages compatible · Safari Home Screen ready · v9</div></div>
 
 <script>
 let DECIMAL_REFRESHING=false;
@@ -175,42 +219,42 @@ function drawTrig(a,b,c,A,C){
   const svg=$("trigSvg");
   a = Number(a)||0; b = Number(b)||0; c = Number(c)||0; A = Number(A)||0; C = Number(C)||0;
 
-  const W=800, H=360;
-  const padL=125, padR=125, padT=70, padB=70;
+  const W=800, H=560;
+  svg.setAttribute("viewBox","0 0 800 560");
+  const padL=145, padR=145, padT=95, padB=95;
   const safeA = Math.max(a, 1);
   const safeC = Math.max(c, 1);
-
   const scale = Math.min((W-padL-padR)/safeC, (H-padT-padB)/safeA);
   const triW = safeC * scale;
   const triH = safeA * scale;
 
-  // Centre triangle in the view, with room around it for labels
   const x0 = (W - triW) / 2;
-  const y0 = (H + triH) / 2 - 10;
+  const y0 = (H + triH) / 2 - 5;
   const x1 = x0 + triW;
   const y1 = y0;
   const x2 = x0;
   const y2 = y0 - triH;
 
   const labelBox = (x,y,text,anchor="middle") => 
-    `<text x="${x}" y="${y}" fill="#69b7ff" font-size="18" font-weight="700" text-anchor="${anchor}" paint-order="stroke" stroke="#14171b" stroke-width="5" stroke-linejoin="round">${text}</text>`;
+    `<text x="${x}" y="${y}" fill="#69b7ff" font-size="22" font-weight="800" text-anchor="${anchor}" paint-order="stroke" stroke="#14171b" stroke-width="7" stroke-linejoin="round">${text}</text>`;
   const angleText = (x,y,text,anchor="middle") =>
-    `<text x="${x}" y="${y}" fill="#eef1f5" font-size="17" font-weight="800" text-anchor="${anchor}" paint-order="stroke" stroke="#14171b" stroke-width="5" stroke-linejoin="round">${text}</text>`;
+    `<text x="${x}" y="${y}" fill="#eef1f5" font-size="20" font-weight="900" text-anchor="${anchor}" paint-order="stroke" stroke="#14171b" stroke-width="7" stroke-linejoin="round">${text}</text>`;
 
   svg.innerHTML=`
-    <polygon points="${x0},${y0} ${x1},${y1} ${x2},${y2}" fill="#20242a" stroke="#ffcc00" stroke-width="5"/>
-    <path d="M ${x0+30} ${y0} L ${x0+30} ${y0-30} L ${x0} ${y0-30}" fill="none" stroke="#eef1f5" stroke-width="3"/>
+    <rect x="22" y="22" width="756" height="516" rx="20" fill="#171b20" stroke="#454b55"/>
+    <polygon points="${x0},${y0} ${x1},${y1} ${x2},${y2}" fill="#20242a" stroke="#ffcc00" stroke-width="6"/>
+    <path d="M ${x0+36} ${y0} L ${x0+36} ${y0-36} L ${x0} ${y0-36}" fill="none" stroke="#eef1f5" stroke-width="4"/>
 
-    ${labelBox(x0-42, (y0+y2)/2, `a = ${fmt(a,3)}`, "end")}
-    ${labelBox((x0+x1)/2, y0+42, `c = ${fmt(c,3)}`)}
-    ${labelBox((x1+x2)/2+52, (y1+y2)/2-16, `b = ${fmt(b,3)}`, "start")}
+    ${labelBox(x0-50, (y0+y2)/2, `a = ${fmt(a)}`, "end")}
+    ${labelBox((x0+x1)/2, y0+54, `c = ${fmt(c)}`)}
+    ${labelBox((x1+x2)/2+62, (y1+y2)/2-18, `b = ${fmt(b)}`, "start")}
 
-    ${angleText(x1-12, y1-24, `A ${fmt(A,2)}°`, "end")}
-    ${angleText(x2+18, y2+30, `C ${fmt(C,2)}°`, "start")}
-    ${angleText(x0+16, y0-12, `B 90°`, "start")}
+    ${angleText(x1-16, y1-30, `A ${fmt(A)}°`, "end")}
+    ${angleText(x2+22, y2+38, `C ${fmt(C)}°`, "start")}
+    ${angleText(x0+20, y0-16, `B 90°`, "start")}
   `;
 }
-$("trigCalc").onclick=trigCalc;$("trigClear").onclick=()=>{["angA","angC","sideA","sideB","sideC"].forEach(id=>$(id).value="");$("angB").value=90;$("trigAnswer").innerHTML="";CURRENT_TRIG=null;drawTrig(0,0,0,0,0)};$("trigSample").onclick=()=>{$("sideA").value=3;$("sideC").value=4;$("sideB").value="";$("angA").value="";$("angC").value="";trigCalc()};$("angA").addEventListener("blur",()=>{const A=Number($("angA").value); if(A>0 && A<90 && !$("angC").value) $("angC").value=fmt(90-A)});$("angC").addEventListener("blur",()=>{const C=Number($("angC").value); if(C>0 && C<90 && !$("angA").value) $("angA").value=fmt(90-C)});
+$("trigCalc".onclick=trigCalc;$("trigClear").onclick=()=>{["angA","angC","sideA","sideB","sideC"].forEach(id=>$(id).value="");$("angB").value=90;$("trigAnswer").innerHTML="";CURRENT_TRIG=null;drawTrig(0,0,0,0,0)};$("trigSample").onclick=()=>{$("sideA").value=3;$("sideC").value=4;$("sideB").value="";$("angA").value="";$("angC").value="";trigCalc()};$("angA").addEventListener("blur",()=>{const A=Number($("angA").value); if(A>0 && A<90 && !$("angC").value) $("angC").value=fmt(90-A)});$("angC").addEventListener("blur",()=>{const C=Number($("angC").value); if(C>0 && C<90 && !$("angA").value) $("angA").value=fmt(90-C)});
 
 $("decPlaces").addEventListener("change",()=>{
   if(CURRENT_SPC) render(CURRENT_SPC); else calc();
